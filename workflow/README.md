@@ -124,7 +124,7 @@ Fixtures are practical samples for storefront and payment flows.
 Each file under `workflow/fixtures/` is a ready-to-run payload.
 
 - `create_listing_allow.json`: happy-path listing create.
-- `create_listing_allow_llm.json`: same listing with request-level `enablePolicyChecks=true`.
+- `create_listing_allow_llm.json`: same listing intended for LLM path when `ENABLE_POLICY_CHECKS=true`.
 - `create_listing_deny_deterministic.json`: deterministic policy deny case.
 - `list_basic.json`: fetch basic listing feed.
 - `search_templates.json`: search by terms/tags.

@@ -9,14 +9,13 @@ import type { ActionHandler } from "../lib/types";
 
 export const handleCreateListing: ActionHandler = (runtime, input) => {
   const parsed = validateCreateListingInput(input);
-  const requestPolicyOverride =
-    typeof input.enablePolicyChecks === "boolean"
-      ? input.enablePolicyChecks
-      : undefined;
-  const settingPolicyEnabled =
-    optionalSetting(runtime, "ENABLE_POLICY_CHECKS", "false").toLowerCase() ===
-    "true";
-  const enablePolicyChecks = requestPolicyOverride ?? settingPolicyEnabled;
+  const enablePolicyChecksSetting = optionalSetting(
+    runtime,
+    "ENABLE_POLICY_CHECKS",
+    "false",
+  );
+  const enablePolicyChecks = enablePolicyChecksSetting.toLowerCase() === "true";
+  logStep(runtime, "OPENAI", `policy checks setting=${enablePolicyChecksSetting}`);
 
   let deterministic: ReturnType<typeof evaluateDeterministicPolicy> | null = null;
   let llm: ReturnType<typeof classifyListingPolicy> | null = null;

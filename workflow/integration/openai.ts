@@ -6,7 +6,7 @@ import {
   type Runtime,
 } from "@chainlink/cre-sdk";
 import { z } from "zod";
-import { optionalSetting } from "../lib/env";
+import { optionalSetting, requireSetting } from "../lib/env";
 import { logStep } from "../lib/log";
 import {
   buildListingPolicyUserPrompt,
@@ -89,35 +89,11 @@ const parseJsonBody = (body: Uint8Array | string): unknown => {
   }
 };
 
-const readOptionalSecret = (
-  runtime: Runtime<unknown>,
-  id: string,
-): string | undefined => {
-  try {
-    const secret = runtime.getSecret({ id }).result();
-    const value = secret?.value?.trim();
-    return value && value.length > 0 ? value : undefined;
-  } catch {
-    return undefined;
-  }
-};
-
-const getOpenAIConfig = (runtime: Runtime<unknown>) => {
-  const apiKeyFromSecret = readOptionalSecret(runtime, "OPENAI_API_KEY");
-  const apiKeyFromEnv = optionalSetting(runtime, "OPENAI_API_KEY", "").trim();
-  const apiKey = apiKeyFromSecret ?? apiKeyFromEnv;
-  if (!apiKey) {
-    throw new Error(
-      'missing required setting "OPENAI_API_KEY" (set env var or workflow secret)',
-    );
-  }
-
-  return {
-    apiKey,
-    model: optionalSetting(runtime, "OPENAI_MODEL", "gpt-4o-mini"),
-    baseUrl: optionalSetting(runtime, "OPENAI_BASE_URL", "https://api.openai.com/v1"),
-  };
-};
+const getOpenAIConfig = (runtime: Runtime<unknown>) => ({
+  apiKey: requireSetting(runtime, "OPENAI_API_KEY"),
+  model: optionalSetting(runtime, "OPENAI_MODEL", "gpt-4o-mini"),
+  baseUrl: optionalSetting(runtime, "OPENAI_BASE_URL", "https://api.openai.com/v1"),
+});
 const toBase64 = (input: Uint8Array): string => Buffer.from(input).toString("base64");
 
 export const classifyListingPolicy = (
@@ -204,5 +180,12 @@ export const classifyListingPolicy = (
     throw new Error("openai classification failed closed: malformed JSON content");
   }
 
-  return classificationSchema.parse(jsonContent);
+  const classification = classificationSchema.parse(jsonContent);
+  logStep(
+    runtime,
+    "OPENAI",
+    `classification result policy=${classification.recommendedPolicy} riskTier=${classification.riskTier} confidence=${classification.confidence} flags=${classification.complianceFlags.join("|") || "none"}`,
+  );
+
+  return classification;
 };

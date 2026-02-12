@@ -1,7 +1,6 @@
 {
   "input": {
     "action": "createListing",
-    "enablePolicyChecks": true,
     "listing": {
       "productId": "prod-template-001",
       "merchant": "0x1111111111111111111111111111111111111111",

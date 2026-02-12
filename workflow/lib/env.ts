@@ -23,6 +23,16 @@ const readFromSecrets = (
   key: string,
   namespaces: readonly string[],
 ): string | undefined => {
+  try {
+    const secret = runtime.getSecret({ id: key }).result();
+    const directValue = secret.value?.trim();
+    if (directValue) {
+      return directValue;
+    }
+  } catch {
+    // Continue with namespaced lookup.
+  }
+
   for (const namespace of namespaces) {
     try {
       const secret = runtime.getSecret({ id: key, namespace }).result();
