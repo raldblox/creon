@@ -2,22 +2,28 @@ import { classifyListingPolicy } from "../integration/openai";
 import { insertOne } from "../integration/mongodb";
 import { buildPolicyArtifact } from "../lib/artifacts";
 import { optionalSetting } from "../lib/env";
+import { logStep } from "../lib/log";
 import { evaluateDeterministicPolicy } from "../lib/policy";
 import { validateCreateListingInput } from "../lib/schema";
 import type { ActionHandler } from "../lib/types";
 
 export const handleCreateListing: ActionHandler = (runtime, input) => {
   const parsed = validateCreateListingInput(input);
-  const enablePolicyChecks =
+  const requestPolicyOverride =
+    typeof input.enablePolicyChecks === "boolean"
+      ? input.enablePolicyChecks
+      : undefined;
+  const settingPolicyEnabled =
     optionalSetting(runtime, "ENABLE_POLICY_CHECKS", "false").toLowerCase() ===
     "true";
+  const enablePolicyChecks = requestPolicyOverride ?? settingPolicyEnabled;
 
   let deterministic: ReturnType<typeof evaluateDeterministicPolicy> | null = null;
   let llm: ReturnType<typeof classifyListingPolicy> | null = null;
   let artifacts: ReturnType<typeof buildPolicyArtifact> | null = null;
 
   if (enablePolicyChecks) {
-    runtime.log("CHECK: policy evaluated");
+    logStep(runtime, "ACTION", "createListing deterministic policy evaluation");
     deterministic = evaluateDeterministicPolicy(parsed.listing);
     if (!deterministic.allow) {
       return {
@@ -37,7 +43,7 @@ export const handleCreateListing: ActionHandler = (runtime, input) => {
       tags: parsed.listing.tags,
       merchant: parsed.listing.merchant,
     });
-    runtime.log("CHECK: llm classification completed");
+    logStep(runtime, "OPENAI", "listing policy classification completed");
 
     if (llm.recommendedPolicy === "deny") {
       return {
@@ -59,7 +65,7 @@ export const handleCreateListing: ActionHandler = (runtime, input) => {
       },
     );
   } else {
-    runtime.log("CHECK: policy checks skipped");
+    logStep(runtime, "OPENAI", "policy checks disabled; skipping LLM classification");
   }
 
   const listingDocument: Record<string, unknown> = {
@@ -82,7 +88,7 @@ export const handleCreateListing: ActionHandler = (runtime, input) => {
     collection: "products",
     document: listingDocument,
   });
-  runtime.log("CHECK: mongodb write ok");
+  logStep(runtime, "MONGODB", "listing inserted into products");
 
   const responseData: Record<string, unknown> = {
     productId: parsed.listing.productId,

@@ -6,7 +6,12 @@ import {
   type Runtime,
 } from "@chainlink/cre-sdk";
 import { z } from "zod";
-import { optionalSetting, requireSetting } from "../lib/env";
+import { optionalSetting } from "../lib/env";
+import { logStep } from "../lib/log";
+import {
+  buildListingPolicyUserPrompt,
+  LISTING_POLICY_SYSTEM_PROMPT,
+} from "../lib/prompts/listingPolicy";
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -60,6 +65,10 @@ type HttpJsonRequest = {
   method: string;
   headers: Record<string, string>;
   body: string;
+  cacheSettings?: {
+    store: boolean;
+    maxAge: string;
+  };
 };
 
 type HttpTextResponse = {
@@ -80,11 +89,35 @@ const parseJsonBody = (body: Uint8Array | string): unknown => {
   }
 };
 
-const getOpenAIConfig = (runtime: Runtime<unknown>) => ({
-  apiKey: requireSetting(runtime, "OPENAI_API_KEY"),
-  model: optionalSetting(runtime, "OPENAI_MODEL", "gpt-4o-mini"),
-  baseUrl: optionalSetting(runtime, "OPENAI_BASE_URL", "https://api.openai.com/v1"),
-});
+const readOptionalSecret = (
+  runtime: Runtime<unknown>,
+  id: string,
+): string | undefined => {
+  try {
+    const secret = runtime.getSecret({ id }).result();
+    const value = secret?.value?.trim();
+    return value && value.length > 0 ? value : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+const getOpenAIConfig = (runtime: Runtime<unknown>) => {
+  const apiKeyFromSecret = readOptionalSecret(runtime, "OPENAI_API_KEY");
+  const apiKeyFromEnv = optionalSetting(runtime, "OPENAI_API_KEY", "").trim();
+  const apiKey = apiKeyFromSecret ?? apiKeyFromEnv;
+  if (!apiKey) {
+    throw new Error(
+      'missing required setting "OPENAI_API_KEY" (set env var or workflow secret)',
+    );
+  }
+
+  return {
+    apiKey,
+    model: optionalSetting(runtime, "OPENAI_MODEL", "gpt-4o-mini"),
+    baseUrl: optionalSetting(runtime, "OPENAI_BASE_URL", "https://api.openai.com/v1"),
+  };
+};
 const toBase64 = (input: Uint8Array): string => Buffer.from(input).toString("base64");
 
 export const classifyListingPolicy = (
@@ -109,23 +142,20 @@ export const classifyListingPolicy = (
     }),
   );
 
-  const systemPrompt =
-    "You are a commerce policy classifier. Return strict JSON only. " +
-    "Assess policy/compliance risks for a digital product listing.";
+  const systemPrompt = LISTING_POLICY_SYSTEM_PROMPT;
+  const userPrompt = buildListingPolicyUserPrompt(listing);
 
-  const userPayload = {
-    listing,
-    instruction:
-      "Classify this listing and return complianceFlags, riskTier, recommendedPolicy, confidence.",
-  };
-
-  runtime.log("CHECK: openai classification start");
+  logStep(runtime, "OPENAI", "analyzing listing policy");
   const response = sendHttp({
     url,
     method: "POST",
     headers: {
       "content-type": "application/json",
       authorization: `Bearer ${config.apiKey}`,
+    },
+    cacheSettings: {
+      store: true,
+      maxAge: "60s",
     },
     body: toBase64(
       textEncoder.encode(
@@ -134,7 +164,7 @@ export const classifyListingPolicy = (
           temperature: 0,
           messages: [
             { role: "system", content: systemPrompt },
-            { role: "user", content: JSON.stringify(userPayload) },
+            { role: "user", content: userPrompt },
           ],
           response_format: {
             type: "json_schema",
@@ -149,7 +179,11 @@ export const classifyListingPolicy = (
     ),
   }).result();
 
-  runtime.log(`CHECK: openai classification completed status=${response.statusCode}`);
+  logStep(
+    runtime,
+    "OPENAI",
+    `analysis completed status=${response.statusCode}`,
+  );
 
   if (response.statusCode < 200 || response.statusCode >= 300) {
     throw new Error(
