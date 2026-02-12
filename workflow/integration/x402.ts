@@ -1,5 +1,6 @@
 import type { Runtime } from "@chainlink/cre-sdk";
 import { z } from "zod";
+import { logStep } from "../lib/log";
 
 const x402ProofSchema = z.object({
   paymentRequired: z.unknown(),
@@ -87,7 +88,7 @@ export const normalizePaymentProof = (
   runtime: Runtime<unknown>,
   proof: unknown,
 ): NormalizedProof => {
-  runtime.log("CHECK: x402 normalization start");
+  logStep(runtime, "PAYMENT", "normalizing payment proof");
   const parsed = anyProofSchema.parse(proof);
 
   let normalized: NormalizedProof;
@@ -151,6 +152,6 @@ export const normalizePaymentProof = (
     };
   }
 
-  runtime.log(`CHECK: x402 normalization completed kind=${normalized.kind}`);
+  logStep(runtime, "PAYMENT", `proof normalized kind=${normalized.kind}`);
   return normalized;
 };

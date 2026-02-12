@@ -30,6 +30,8 @@ Routes execute implemented workflow logic and emit `CHECK` checkpoints.
 ## OpenAI LLM Policy Classifier
 The LLM path is implemented in `workflow/integration/openai.ts` and is called by
 `workflow/process/createListing.ts` only when `ENABLE_POLICY_CHECKS=true`.
+The system prompt is isolated in `workflow/lib/prompts/listingPolicy.ts`.
+Reference pattern: https://smartcontractkit.github.io/cre-bootcamp-2026/day-2/04-ai-integration.html
 
 Classification output:
 - `complianceFlags`
@@ -41,6 +43,7 @@ Behavior:
 - If deterministic checks fail, listing is denied before LLM.
 - If LLM returns `deny`, listing is denied with `reasonCode=POLICY_DENY_LLM`.
 - If allowed/review, listing is stored and `llmPolicy` is saved in MongoDB.
+- `OPENAI_API_KEY` can be loaded from `.env` or workflow secret `OPENAI_API_KEY`.
 
 ## Response Shape
 All actions now return a CREON result envelope with an `acp` section aligned to the Agentic Commerce Protocol.
@@ -99,28 +102,29 @@ cre workflow simulate ./workflow --env .env --target=staging-settings --non-inte
 ```
 
 Expected log checkpoints include:
-- `CHECK: input validated`
-- `CHECK: action resolved = list`
-- `CHECK: mongodb read ok`
+- `[INPUT] validated payload`
+- `[ACTION] routing action=list`
+- `[MONGODB] list query completed`
 
 To test LLM classification on listing:
 1. Set `ENABLE_POLICY_CHECKS=true` and valid OpenAI keys in root `.env`.
 2. Run:
 
 ```bash
-cre workflow simulate ./workflow --env .env --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_allow.json"
+cre workflow simulate ./workflow --env .env --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_allow_llm.json"
 ```
 
 Expected LLM logs:
-- `CHECK: openai classification start`
-- `CHECK: openai classification completed status=200`
-- `CHECK: llm classification completed`
+- `[OPENAI] analyzing listing policy`
+- `[OPENAI] analysis completed status=200`
+- `[OPENAI] listing policy classification completed`
 
 ## Fixture Coverage
 Fixtures are practical samples for storefront and payment flows.
 Each file under `workflow/fixtures/` is a ready-to-run payload.
 
 - `create_listing_allow.json`: happy-path listing create.
+- `create_listing_allow_llm.json`: same listing with request-level `enablePolicyChecks=true`.
 - `create_listing_deny_deterministic.json`: deterministic policy deny case.
 - `list_basic.json`: fetch basic listing feed.
 - `search_templates.json`: search by terms/tags.

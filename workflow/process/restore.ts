@@ -1,4 +1,5 @@
 import { find } from "../integration/mongodb";
+import { logStep } from "../lib/log";
 import { validateRestoreInput } from "../lib/schema";
 import type { ActionHandler } from "../lib/types";
 
@@ -39,7 +40,7 @@ export const handleRestore: ActionHandler = (runtime, input) => {
     filter: { buyer: parsed.buyer, productId: parsed.productId },
     limit: 1,
   });
-  runtime.log("CHECK: mongodb read ok");
+  logStep(runtime, "MONGODB", "restore entitlement lookup completed");
 
   if (entitlement.documents.length === 0) {
     return {

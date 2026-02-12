@@ -18,6 +18,7 @@ import {
   handleVerify,
 } from "./process";
 import { withACPEnvelope } from "./lib/acp";
+import { logStep } from "./lib/log";
 import { toJsonSafeValue } from "./lib/serialize";
 import type { ActionHandlerResult, WorkflowInput } from "./lib/types";
 
@@ -86,8 +87,8 @@ const onHttpTrigger = (
   payload: HTTPPayload,
 ): ActionHandlerResult => {
   const input = parsePayload(payload);
-  runtime.log("CHECK: input validated");
-  runtime.log(`CHECK: action resolved = ${input.action}`);
+  logStep(runtime, "INPUT", "validated payload");
+  logStep(runtime, "ACTION", `routing action=${input.action}`);
   const result = withACPEnvelope(routeAction(runtime, input));
   return toJsonSafeValue(result) as ActionHandlerResult;
 };

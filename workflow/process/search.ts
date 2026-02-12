@@ -1,4 +1,5 @@
 import { find } from "../integration/mongodb";
+import { logStep } from "../lib/log";
 import { validateSearchInput } from "../lib/schema";
 import { stripNullish } from "../lib/serialize";
 import type { ActionHandler } from "../lib/types";
@@ -27,7 +28,7 @@ export const handleSearch: ActionHandler = (runtime, input) => {
     sort: { createdAt: -1 },
     limit: parsed.limit ?? 20,
   });
-  runtime.log("CHECK: mongodb read ok");
+  logStep(runtime, "MONGODB", "search query completed");
 
   return {
     ok: true,

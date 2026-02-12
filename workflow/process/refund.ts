@@ -1,6 +1,7 @@
 import { type Address } from "viem";
 import { hasEntitlementOnchain } from "../integration/chain";
 import { find } from "../integration/mongodb";
+import { logStep } from "../lib/log";
 import { validateRefundInput } from "../lib/schema";
 import type { ActionHandler } from "../lib/types";
 
@@ -12,7 +13,7 @@ export const handleRefund: ActionHandler = (runtime, input) => {
     filter: { buyer: parsed.buyer, productId: parsed.productId },
     limit: 1,
   });
-  runtime.log("CHECK: mongodb read ok");
+  logStep(runtime, "MONGODB", "refund eligibility lookup completed");
 
   const eligibleByDuplicate =
     refundEligibility.documents.length > 0 &&

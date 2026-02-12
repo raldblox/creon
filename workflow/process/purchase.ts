@@ -10,6 +10,7 @@ import {
   validatePricingDefaults,
 } from "../lib/commerce";
 import { verifyFeeAmount } from "../lib/fee";
+import { logStep } from "../lib/log";
 import { hasReplayFingerprint, storeReplayFingerprint } from "../lib/replay";
 import { validatePurchaseInput } from "../lib/schema";
 import type { ActionHandler } from "../lib/types";
@@ -41,7 +42,7 @@ export const handlePurchase: ActionHandler = (runtime, input) => {
   }
 
   const normalized = normalizePaymentProof(runtime, parsed.proof);
-  runtime.log("CHECK: proof verified");
+  logStep(runtime, "PAYMENT", "payment proof verified");
 
   if (
     normalized.payTo &&
@@ -74,7 +75,7 @@ export const handlePurchase: ActionHandler = (runtime, input) => {
       },
     };
   }
-  runtime.log("CHECK: fee verified");
+  logStep(runtime, "PAYMENT", "fee validation passed");
 
   const duplicateProof = hasReplayFingerprint(runtime, normalized.fingerprint);
 
@@ -129,7 +130,7 @@ export const handlePurchase: ActionHandler = (runtime, input) => {
     productId: parsed.productId,
     proofKind: normalized.kind,
   });
-  runtime.log("CHECK: replay stored");
+  logStep(runtime, "ACTION", "replay fingerprint stored");
 
   const onchain = recordEntitlementOnchain(
     runtime,
@@ -152,7 +153,7 @@ export const handlePurchase: ActionHandler = (runtime, input) => {
     },
     upsert: true,
   });
-  runtime.log("CHECK: entitlement written");
+  logStep(runtime, "MONGODB", "entitlement upsert completed");
 
   insertOne(runtime, {
     collection: "purchases",

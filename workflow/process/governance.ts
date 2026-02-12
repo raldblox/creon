@@ -1,4 +1,5 @@
 import { updateOne } from "../integration/mongodb";
+import { logStep } from "../lib/log";
 import { validateGovernanceInput } from "../lib/schema";
 import type { ActionHandler } from "../lib/types";
 
@@ -17,7 +18,7 @@ export const handleGovernance: ActionHandler = (runtime, input) => {
     },
     upsert: false,
   });
-  runtime.log("CHECK: mongodb write ok");
+  logStep(runtime, "MONGODB", "governance status update completed");
 
   return {
     ok: true,

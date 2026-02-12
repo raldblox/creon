@@ -7,6 +7,7 @@ import {
 } from "@chainlink/cre-sdk";
 import { z } from "zod";
 import { optionalSetting } from "../lib/env";
+import { logStep } from "../lib/log";
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -116,7 +117,7 @@ const executeMongoAction = (
   let lastError: unknown;
 
   for (let attempt = 1; attempt <= retries; attempt += 1) {
-    runtime.log(`CHECK: mongodb call start action=${action} attempt=${attempt}`);
+    logStep(runtime, "MONGODB", `call start action=${action} attempt=${attempt}`);
     try {
       const response = sendHttp({
         url: `${baseUrl}/${action}`,
@@ -128,8 +129,10 @@ const executeMongoAction = (
         body: toBase64(textEncoder.encode(JSON.stringify(payload))),
       }).result();
 
-      runtime.log(
-        `CHECK: mongodb call completed action=${action} status=${response.statusCode}`,
+      logStep(
+        runtime,
+        "MONGODB",
+        `call completed action=${action} status=${response.statusCode}`,
       );
 
       const parsedBody = readJson(response.body);
@@ -145,7 +148,11 @@ const executeMongoAction = (
       }
 
       lastError = new Error(message);
-      runtime.log(`CHECK: mongodb retry action=${action} nextAttempt=${attempt + 1}`);
+      logStep(
+        runtime,
+        "MONGODB",
+        `retry scheduled action=${action} nextAttempt=${attempt + 1}`,
+      );
     } catch (error) {
       const shouldRetry = attempt < retries;
       lastError = error;
@@ -154,7 +161,11 @@ const executeMongoAction = (
           `mongodb ${action} failed after ${attempt} attempt(s): ${String(error)}`,
         );
       }
-      runtime.log(`CHECK: mongodb retry action=${action} nextAttempt=${attempt + 1}`);
+      logStep(
+        runtime,
+        "MONGODB",
+        `retry scheduled action=${action} nextAttempt=${attempt + 1}`,
+      );
     }
   }
 

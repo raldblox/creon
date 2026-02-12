@@ -12,6 +12,7 @@ import { decodeFunctionResult, encodeFunctionData } from "viem";
 import { zeroAddress, type Address, type Hex } from "viem";
 import { EntitlementRegistry } from "../../contracts/abi";
 import { optionalSetting, requireSetting } from "../lib/env";
+import { logStep } from "../lib/log";
 
 type ChainConfig = {
   chainSelectorName: string;
@@ -57,7 +58,7 @@ export const callContractRead = (
   runtime: Runtime<unknown>,
   params: ContractReadParams,
 ): Hex => {
-  runtime.log(`CHECK: chain read start chain=${params.chainSelectorName}`);
+  logStep(runtime, "CHAIN", `read start chain=${params.chainSelectorName}`);
   const client = resolveClient(params);
   const reply = client
     .callContract(runtime, {
@@ -70,7 +71,7 @@ export const callContractRead = (
     })
     .result();
 
-  runtime.log(`CHECK: chain read completed chain=${params.chainSelectorName}`);
+  logStep(runtime, "CHAIN", `read completed chain=${params.chainSelectorName}`);
   return bytesToHex(reply.data) as Hex;
 };
 
@@ -78,7 +79,7 @@ export const writeContractReport = (
   runtime: Runtime<unknown>,
   params: ContractWriteReportParams,
 ): { txHash: Hex } => {
-  runtime.log(`CHECK: chain write start chain=${params.chainSelectorName}`);
+  logStep(runtime, "CHAIN", `write start chain=${params.chainSelectorName}`);
   const client = resolveClient(params);
   const configuredGasLimit = optionalSetting(runtime, "CHAIN_GAS_LIMIT", "1000000");
   const gasLimit = params.gasLimit ?? configuredGasLimit;
@@ -107,8 +108,10 @@ export const writeContractReport = (
   }
 
   const txHash = bytesToHex(result.txHash ?? new Uint8Array(32)) as Hex;
-  runtime.log(
-    `CHECK: chain write completed chain=${params.chainSelectorName} txHash=${txHash}`,
+  logStep(
+    runtime,
+    "CHAIN",
+    `write completed chain=${params.chainSelectorName} txHash=${txHash}`,
   );
   return { txHash };
 };

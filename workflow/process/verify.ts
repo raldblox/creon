@@ -1,11 +1,12 @@
 import { normalizePaymentProof } from "../integration/x402";
+import { logStep } from "../lib/log";
 import { validateVerifyInput } from "../lib/schema";
 import type { ActionHandler } from "../lib/types";
 
 export const handleVerify: ActionHandler = (runtime, input) => {
   const parsed = validateVerifyInput(input);
   const normalized = normalizePaymentProof(runtime, parsed.proof);
-  runtime.log("CHECK: proof verified");
+  logStep(runtime, "PAYMENT", "verification proof normalized");
   const data: Record<string, unknown> = {
     kind: normalized.kind,
     fingerprint: normalized.fingerprint,
