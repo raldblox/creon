@@ -21,7 +21,7 @@ export type ActionHandlerResult = {
   action: string;
   message: string;
   reasonCode?: string;
-  data?: unknown;
+  data?: any;
   acp?: {
     version: string;
     messages: Array<{
