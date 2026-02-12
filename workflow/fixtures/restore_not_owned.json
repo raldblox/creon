@@ -1,0 +1,7 @@
+{
+  "input": {
+    "action": "restore",
+    "buyer": "0x9999999999999999999999999999999999999999",
+    "productId": "prod-template-001"
+  }
+}

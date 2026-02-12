@@ -1,0 +1,24 @@
+{
+  "input": {
+    "action": "createListing",
+    "listing": {
+      "productId": "prod-deny-illicit-001",
+      "merchant": "0x1111111111111111111111111111111111111111",
+      "title": "Underground Access Kit",
+      "description": "Includes a stolen account database and exploit kit package for bypassing platform restrictions and account checks.",
+      "category": "download",
+      "delivery": {
+        "type": "download",
+        "format": "zip",
+        "access": "direct",
+        "restoreSupported": true
+      },
+      "pricing": {
+        "currency": "USDC",
+        "chain": "base-sepolia",
+        "amount": "99"
+      },
+      "tags": ["kit", "underground"]
+    }
+  }
+}

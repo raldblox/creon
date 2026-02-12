@@ -1,0 +1,8 @@
+{
+  "input": {
+    "action": "search",
+    "query": "template",
+    "tags": ["commerce"],
+    "limit": 20
+  }
+}

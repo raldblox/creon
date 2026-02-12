@@ -1,0 +1,29 @@
+{
+  "input": {
+    "action": "createListing",
+    "listing": {
+      "productId": "prod-template-001",
+      "merchant": "0x1111111111111111111111111111111111111111",
+      "title": "Premium Growth Template Pack",
+      "description": "A production-ready template bundle for agentic commerce teams, including SOPs, KPI dashboards, and implementation checklists.",
+      "category": "template",
+      "delivery": {
+        "type": "download",
+        "format": "zip",
+        "access": "gated",
+        "restoreSupported": true
+      },
+      "pricing": {
+        "currency": "USDC",
+        "chain": "base-sepolia",
+        "amount": "25"
+      },
+      "tags": ["template", "commerce", "ops"],
+      "policies": {
+        "refundPolicy": "limited",
+        "regionDenylist": ["KP"],
+        "maxPurchasesPerBuyer": 5
+      }
+    }
+  }
+}

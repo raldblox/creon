@@ -1,0 +1,10 @@
+{
+  "input": {
+    "action": "decide",
+    "allow": true,
+    "reasonCode": "ALLOW",
+    "context": {
+      "source": "manual-test"
+    }
+  }
+}

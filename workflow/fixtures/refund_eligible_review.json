@@ -1,0 +1,9 @@
+{
+  "input": {
+    "action": "refund",
+    "intentId": "intent-refund-review-001",
+    "buyer": "0x4444444444444444444444444444444444444444",
+    "productId": "prod-template-001",
+    "reason": "accidental_purchase"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "input": {
+    "action": "governance",
+    "actor": "0xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+    "productId": "prod-template-001",
+    "status": "PAUSED"
+  }
+}

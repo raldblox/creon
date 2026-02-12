@@ -1,0 +1,163 @@
+{
+  "name": "CREON workflow fixture index",
+  "notes": [
+    "Run from repo root with: cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload @./workflow/fixtures/<file>.json",
+    "Some paths are stateful and require setup order (create listing before purchase, purchase before restore/refund active-entitlement branch).",
+    "CreateListing ALLOW also depends on OpenAI classifier response."
+  ],
+  "scenarios": [
+    {
+      "file": "create_listing_allow.json",
+      "action": "createListing",
+      "expectedReasonCode": "ALLOW",
+      "expectedOk": true,
+      "purpose": "Happy path listing creation."
+    },
+    {
+      "file": "create_listing_deny_deterministic.json",
+      "action": "createListing",
+      "expectedReasonCode": "POLICY_DENY_DISALLOWED_GOODS",
+      "expectedOk": false,
+      "purpose": "Deterministic policy deny path."
+    },
+    {
+      "file": "list_basic.json",
+      "action": "list",
+      "expectedReasonCode": "LIST_OK",
+      "expectedOk": true,
+      "purpose": "List catalog."
+    },
+    {
+      "file": "search_templates.json",
+      "action": "search",
+      "expectedReasonCode": "SEARCH_OK",
+      "expectedOk": true,
+      "purpose": "Search by query+tags."
+    },
+    {
+      "file": "purchase_success_tx.json",
+      "action": "purchase",
+      "expectedReasonCode": "PURCHASE_SUCCESS",
+      "expectedOk": true,
+      "purpose": "Purchase success via tx proof.",
+      "requires": ["create_listing_allow.json"]
+    },
+    {
+      "file": "purchase_fee_mismatch.json",
+      "action": "purchase",
+      "expectedReasonCode": "FEE_MISMATCH",
+      "expectedOk": false,
+      "purpose": "Purchase reject when fee is missing."
+    },
+    {
+      "file": "purchase_success_x402.json",
+      "action": "purchase",
+      "expectedReasonCode": "PURCHASE_SUCCESS",
+      "expectedOk": true,
+      "purpose": "Purchase success via x402 proof.",
+      "requires": ["create_listing_allow.json"]
+    },
+    {
+      "file": "purchase_duplicate_proof.json",
+      "action": "purchase",
+      "expectedReasonCode": "REFUND_ELIGIBLE_DOUBLE_PURCHASE",
+      "expectedOk": false,
+      "purpose": "Reject duplicate proof fingerprint.",
+      "requires": ["create_listing_allow.json", "purchase_success_tx.json"]
+    },
+    {
+      "file": "purchase_already_owned.json",
+      "action": "purchase",
+      "expectedReasonCode": "REFUND_ELIGIBLE_ALREADY_OWNED",
+      "expectedOk": false,
+      "purpose": "Reject second purchase for already-entitled buyer with new proof.",
+      "requires": ["create_listing_allow.json", "purchase_success_tx.json"]
+    },
+    {
+      "file": "restore_owned.json",
+      "action": "restore",
+      "expectedReasonCode": "RESTORE_ALLOWED",
+      "expectedOk": true,
+      "purpose": "Restore for owned product.",
+      "requires": ["create_listing_allow.json", "purchase_success_tx.json"]
+    },
+    {
+      "file": "restore_not_owned.json",
+      "action": "restore",
+      "expectedReasonCode": "NOT_OWNED",
+      "expectedOk": false,
+      "purpose": "Restore denied for non-owner.",
+      "requires": ["create_listing_allow.json"]
+    },
+    {
+      "file": "restore_product_not_found.json",
+      "action": "restore",
+      "expectedReasonCode": "PRODUCT_NOT_FOUND",
+      "expectedOk": false,
+      "purpose": "Restore denied when product does not exist."
+    },
+    {
+      "file": "restore_banned.json",
+      "action": "restore",
+      "expectedReasonCode": "RESTORE_DENIED_BANNED",
+      "expectedOk": false,
+      "purpose": "Restore denied for banned product.",
+      "requires": [
+        "create_listing_allow.json",
+        "purchase_success_tx.json",
+        "governance_ban.json"
+      ]
+    },
+    {
+      "file": "refund_request.json",
+      "action": "refund",
+      "expectedReasonCode": "REFUND_REJECTED_ENTITLEMENT_ACTIVE",
+      "expectedOk": false,
+      "purpose": "Refund denied when entitlement is active.",
+      "requires": ["create_listing_allow.json", "purchase_success_tx.json"]
+    },
+    {
+      "file": "refund_eligible_review.json",
+      "action": "refund",
+      "expectedReasonCode": "REFUND_ELIGIBLE_REVIEW",
+      "expectedOk": true,
+      "purpose": "Refund eligible when buyer has no active entitlement.",
+      "requires": ["create_listing_allow.json"]
+    },
+    {
+      "file": "governance_pause.json",
+      "action": "governance",
+      "expectedReasonCode": "GOVERNANCE_UPDATED",
+      "expectedOk": true,
+      "purpose": "Pause a product."
+    },
+    {
+      "file": "governance_ban.json",
+      "action": "governance",
+      "expectedReasonCode": "GOVERNANCE_UPDATED",
+      "expectedOk": true,
+      "purpose": "Ban a product."
+    },
+    {
+      "file": "verify_tx.json",
+      "action": "verify",
+      "expectedReasonCode": "VERIFY_OK",
+      "expectedOk": true,
+      "purpose": "Proof normalization and verification."
+    },
+    {
+      "file": "decide_allow.json",
+      "action": "decide",
+      "expectedReasonCode": "ALLOW",
+      "expectedOk": true,
+      "purpose": "Decision allow path."
+    },
+    {
+      "file": "decide_deny.json",
+      "action": "decide",
+      "expectedReasonCode": "DENY",
+      "expectedOk": false,
+      "purpose": "Decision deny path."
+    }
+  ]
+}

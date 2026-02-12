@@ -1,0 +1,35 @@
+{
+  "input": {
+    "action": "purchase",
+    "intentId": "intent-purchase-x402-001",
+    "buyer": "0x3333333333333333333333333333333333333333",
+    "merchant": "0x1111111111111111111111111111111111111111",
+    "productId": "prod-template-001",
+    "pricing": {
+      "currency": "USDC",
+      "chain": "base-sepolia",
+      "amount": "25"
+    },
+    "feeBps": 100,
+    "proof": {
+      "x402": {
+        "paymentRequired": {
+          "version": "x402-1"
+        },
+        "paymentSignature": {
+          "sig": "0xdeadbeef"
+        },
+        "settlementTx": {
+          "txHash": "0xabc0000000000000000000000000000000000000000000000000000000000003",
+          "chainId": "84532",
+          "from": "0x3333333333333333333333333333333333333333",
+          "to": "0x1111111111111111111111111111111111111111",
+          "amount": "25.25",
+          "token": "USDC"
+        },
+        "network": "eip155:84532",
+        "asset": "USDC"
+      }
+    }
+  }
+}
