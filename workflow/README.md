@@ -28,6 +28,10 @@ or `workflow/.env.example`) and/or in workflow secrets:
 - `OPENAI_MODEL`
 - `OPENAI_BASE_URL`
 - `CHAIN_GAS_LIMIT`
+- `ENTITLEMENT_REGISTRY_ADDRESS`
+- `AGENT_WALLET_ADDRESS`
+- `COMMERCE_CHAIN_SELECTOR_NAME` (default: `ethereum-testnet-sepolia-base-1`)
+- `COMMERCE_USDC_ADDRESS`
 
 ## Simulate
 From repo root:

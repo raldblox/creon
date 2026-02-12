@@ -60,7 +60,7 @@
     {
       "file": "purchase_duplicate_proof.json",
       "action": "purchase",
-      "expectedReasonCode": "REFUND_ELIGIBLE_DOUBLE_PURCHASE",
+      "expectedReasonCode": "REFUND_ELIGIBLE_DUPLICATE_PURCHASE",
       "expectedOk": false,
       "purpose": "Reject duplicate proof fingerprint.",
       "requires": ["create_listing_allow.json", "purchase_success_tx.json"]
@@ -68,7 +68,7 @@
     {
       "file": "purchase_already_owned.json",
       "action": "purchase",
-      "expectedReasonCode": "REFUND_ELIGIBLE_ALREADY_OWNED",
+      "expectedReasonCode": "REFUND_ELIGIBLE_DUPLICATE_PURCHASE",
       "expectedOk": false,
       "purpose": "Reject second purchase for already-entitled buyer with new proof.",
       "requires": ["create_listing_allow.json", "purchase_success_tx.json"]
@@ -111,17 +111,21 @@
     {
       "file": "refund_request.json",
       "action": "refund",
-      "expectedReasonCode": "REFUND_REJECTED_ENTITLEMENT_ACTIVE",
-      "expectedOk": false,
-      "purpose": "Refund denied when entitlement is active.",
-      "requires": ["create_listing_allow.json", "purchase_success_tx.json"]
+      "expectedReasonCode": "REFUND_ELIGIBLE_DUPLICATE_PURCHASE",
+      "expectedOk": true,
+      "purpose": "Refund eligible when duplicate buyer+product purchase exists.",
+      "requires": [
+        "create_listing_allow.json",
+        "purchase_success_tx.json",
+        "purchase_already_owned.json"
+      ]
     },
     {
       "file": "refund_eligible_review.json",
       "action": "refund",
-      "expectedReasonCode": "REFUND_ELIGIBLE_REVIEW",
-      "expectedOk": true,
-      "purpose": "Refund eligible when buyer has no active entitlement.",
+      "expectedReasonCode": "REFUND_REJECTED_NOT_DUPLICATE",
+      "expectedOk": false,
+      "purpose": "Refund denied when duplicate buyer+product purchase does not exist.",
       "requires": ["create_listing_allow.json"]
     },
     {

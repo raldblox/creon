@@ -8,8 +8,10 @@ import {
   hexToBase64,
   type Runtime,
 } from "@chainlink/cre-sdk";
+import { decodeFunctionResult, encodeFunctionData } from "viem";
 import { zeroAddress, type Address, type Hex } from "viem";
-import { optionalSetting } from "../lib/env";
+import { EntitlementRegistry } from "../../contracts/abi";
+import { optionalSetting, requireSetting } from "../lib/env";
 
 type ChainConfig = {
   chainSelectorName: string;
@@ -27,6 +29,15 @@ type ContractWriteReportParams = ChainConfig & {
   callData: Hex;
   gasLimit?: string;
 };
+
+export const getCommerceChainSelectorName = (
+  runtime: Runtime<unknown>,
+): string =>
+  optionalSetting(runtime, "COMMERCE_CHAIN_SELECTOR_NAME", "ethereum-testnet-sepolia-base-1");
+
+export const getEntitlementRegistryAddress = (
+  runtime: Runtime<unknown>,
+): Address => requireSetting(runtime, "ENTITLEMENT_REGISTRY_ADDRESS") as Address;
 
 const resolveClient = (params: ChainConfig): EVMClient => {
   const network = getNetwork({
@@ -100,4 +111,52 @@ export const writeContractReport = (
     `CHECK: chain write completed chain=${params.chainSelectorName} txHash=${txHash}`,
   );
   return { txHash };
+};
+
+export const hasEntitlementOnchain = (
+  runtime: Runtime<unknown>,
+  buyer: Address,
+  productId: string,
+): boolean => {
+  const chainSelectorName = getCommerceChainSelectorName(runtime);
+  const registry = getEntitlementRegistryAddress(runtime);
+
+  const data = encodeFunctionData({
+    abi: EntitlementRegistry,
+    functionName: "hasEntitlement",
+    args: [buyer, productId],
+  });
+
+  const raw = callContractRead(runtime, {
+    chainSelectorName,
+    to: registry,
+    data,
+  });
+
+  return decodeFunctionResult({
+    abi: EntitlementRegistry,
+    functionName: "hasEntitlement",
+    data: raw,
+  });
+};
+
+export const recordEntitlementOnchain = (
+  runtime: Runtime<unknown>,
+  buyer: Address,
+  productId: string,
+): { txHash: Hex } => {
+  const chainSelectorName = getCommerceChainSelectorName(runtime);
+  const registry = getEntitlementRegistryAddress(runtime);
+
+  const data = encodeFunctionData({
+    abi: EntitlementRegistry,
+    functionName: "recordEntitlement",
+    args: [buyer, productId],
+  });
+
+  return writeContractReport(runtime, {
+    chainSelectorName,
+    receiver: registry,
+    callData: data,
+  });
 };
