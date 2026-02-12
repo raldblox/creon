@@ -21,7 +21,23 @@ export type ActionHandlerResult = {
   action: string;
   message: string;
   reasonCode?: string;
-  data?: any;
+  data?: unknown;
+  acp?: {
+    version: string;
+    messages: Array<{
+      type: "info" | "warning" | "error";
+      code?: string;
+      param?: string;
+      content_type: "plain";
+      content: string;
+    }>;
+    error?: {
+      type: "invalid_request" | "request_not_idempotent" | "processing_error" | "service_unavailable";
+      code?: string;
+      message: string;
+      param?: string;
+    };
+  };
 };
 
 export type ActionHandler = (
