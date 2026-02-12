@@ -1,5 +1,6 @@
 import { find } from "../integration/mongodb";
 import { validateSearchInput } from "../lib/schema";
+import { stripNullish } from "../lib/serialize";
 import type { ActionHandler } from "../lib/types";
 
 export const handleSearch: ActionHandler = (runtime, input) => {
@@ -35,7 +36,7 @@ export const handleSearch: ActionHandler = (runtime, input) => {
     message: "search results returned",
     data: {
       count: response.documents.length,
-      items: response.documents,
+      items: stripNullish(response.documents),
     },
   };
 };

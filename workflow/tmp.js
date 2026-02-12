@@ -6194,33 +6194,33 @@ class ClientCapability2 {
     return runtime.runInNodeMode(wrappedFn, consensusAggregation, unwrapOptions);
   }
 }
+var file_capabilities_networking_http_v1alpha_trigger = /* @__PURE__ */ fileDesc("CjJjYXBhYmlsaXRpZXMvbmV0d29ya2luZy9odHRwL3YxYWxwaGEvdHJpZ2dlci5wcm90bxIkY2FwYWJpbGl0aWVzLm5ldHdvcmtpbmcuaHR0cC52MWFscGhhIlYKBkNvbmZpZxJMCg9hdXRob3JpemVkX2tleXMYASADKAsyMy5jYXBhYmlsaXRpZXMubmV0d29ya2luZy5odHRwLnYxYWxwaGEuQXV0aG9yaXplZEtleSJaCgdQYXlsb2FkEg0KBWlucHV0GAEgASgMEkAKA2tleRgCIAEoCzIzLmNhcGFiaWxpdGllcy5uZXR3b3JraW5nLmh0dHAudjFhbHBoYS5BdXRob3JpemVkS2V5ImAKDUF1dGhvcml6ZWRLZXkSOwoEdHlwZRgBIAEoDjItLmNhcGFiaWxpdGllcy5uZXR3b3JraW5nLmh0dHAudjFhbHBoYS5LZXlUeXBlEhIKCnB1YmxpY19rZXkYAiABKAkqOwoHS2V5VHlwZRIYChRLRVlfVFlQRV9VTlNQRUNJRklFRBAAEhYKEktFWV9UWVBFX0VDRFNBX0VWTRABMpIBCgRIVFRQEmgKB1RyaWdnZXISLC5jYXBhYmlsaXRpZXMubmV0d29ya2luZy5odHRwLnYxYWxwaGEuQ29uZmlnGi0uY2FwYWJpbGl0aWVzLm5ldHdvcmtpbmcuaHR0cC52MWFscGhhLlBheWxvYWQwARoggrUYHAgBEhhodHRwLXRyaWdnZXJAMS4wLjAtYWxwaGFC6wEKKGNvbS5jYXBhYmlsaXRpZXMubmV0d29ya2luZy5odHRwLnYxYWxwaGFCDFRyaWdnZXJQcm90b1ABogIDQ05IqgIkQ2FwYWJpbGl0aWVzLk5ldHdvcmtpbmcuSHR0cC5WMWFscGhhygIkQ2FwYWJpbGl0aWVzXE5ldHdvcmtpbmdcSHR0cFxWMWFscGhh4gIwQ2FwYWJpbGl0aWVzXE5ldHdvcmtpbmdcSHR0cFxWMWFscGhhXEdQQk1ldGFkYXRh6gInQ2FwYWJpbGl0aWVzOjpOZXR3b3JraW5nOjpIdHRwOjpWMWFscGhhYgZwcm90bzM", [file_tools_generator_v1alpha_cre_metadata]);
+var ConfigSchema = /* @__PURE__ */ messageDesc(file_capabilities_networking_http_v1alpha_trigger, 0);
+var PayloadSchema = /* @__PURE__ */ messageDesc(file_capabilities_networking_http_v1alpha_trigger, 1);
 var KeyType;
 (function(KeyType2) {
   KeyType2[KeyType2["UNSPECIFIED"] = 0] = "UNSPECIFIED";
   KeyType2[KeyType2["ECDSA_EVM"] = 1] = "ECDSA_EVM";
 })(KeyType || (KeyType = {}));
-var file_capabilities_scheduler_cron_v1_trigger = /* @__PURE__ */ fileDesc("CixjYXBhYmlsaXRpZXMvc2NoZWR1bGVyL2Nyb24vdjEvdHJpZ2dlci5wcm90bxIeY2FwYWJpbGl0aWVzLnNjaGVkdWxlci5jcm9uLnYxIhoKBkNvbmZpZxIQCghzY2hlZHVsZRgBIAEoCSJHCgdQYXlsb2FkEjwKGHNjaGVkdWxlZF9leGVjdXRpb25fdGltZRgBIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXAiNQoNTGVnYWN5UGF5bG9hZBIgChhzY2hlZHVsZWRfZXhlY3V0aW9uX3RpbWUYASABKAk6AhgBMvUBCgRDcm9uElwKB1RyaWdnZXISJi5jYXBhYmlsaXRpZXMuc2NoZWR1bGVyLmNyb24udjEuQ29uZmlnGicuY2FwYWJpbGl0aWVzLnNjaGVkdWxlci5jcm9uLnYxLlBheWxvYWQwARJzCg1MZWdhY3lUcmlnZ2VyEiYuY2FwYWJpbGl0aWVzLnNjaGVkdWxlci5jcm9uLnYxLkNvbmZpZxotLmNhcGFiaWxpdGllcy5zY2hlZHVsZXIuY3Jvbi52MS5MZWdhY3lQYXlsb2FkIgmIAgGKtRgCCAEwARoagrUYFggBEhJjcm9uLXRyaWdnZXJAMS4wLjBCzQEKImNvbS5jYXBhYmlsaXRpZXMuc2NoZWR1bGVyLmNyb24udjFCDFRyaWdnZXJQcm90b1ABogIDQ1NDqgIeQ2FwYWJpbGl0aWVzLlNjaGVkdWxlci5Dcm9uLlYxygIeQ2FwYWJpbGl0aWVzXFNjaGVkdWxlclxDcm9uXFYx4gIqQ2FwYWJpbGl0aWVzXFNjaGVkdWxlclxDcm9uXFYxXEdQQk1ldGFkYXRh6gIhQ2FwYWJpbGl0aWVzOjpTY2hlZHVsZXI6OkNyb246OlYxYgZwcm90bzM", [file_google_protobuf_timestamp, file_tools_generator_v1alpha_cre_metadata]);
-var ConfigSchema2 = /* @__PURE__ */ messageDesc(file_capabilities_scheduler_cron_v1_trigger, 0);
-var PayloadSchema2 = /* @__PURE__ */ messageDesc(file_capabilities_scheduler_cron_v1_trigger, 1);
 
-class CronCapability {
-  static CAPABILITY_ID = "cron-trigger@1.0.0";
-  static CAPABILITY_NAME = "cron-trigger";
-  static CAPABILITY_VERSION = "1.0.0";
+class HTTPCapability {
+  static CAPABILITY_ID = "http-trigger@1.0.0-alpha";
+  static CAPABILITY_NAME = "http-trigger";
+  static CAPABILITY_VERSION = "1.0.0-alpha";
   trigger(config) {
-    const capabilityId = CronCapability.CAPABILITY_ID;
-    return new CronTrigger(config, capabilityId, "Trigger");
+    const capabilityId = HTTPCapability.CAPABILITY_ID;
+    return new HTTPTrigger(config, capabilityId, "Trigger");
   }
 }
 
-class CronTrigger {
+class HTTPTrigger {
   _capabilityId;
   _method;
   config;
   constructor(config, _capabilityId, _method) {
     this._capabilityId = _capabilityId;
     this._method = _method;
-    this.config = config.$typeName ? config : fromJson(ConfigSchema2, config);
+    this.config = config.$typeName ? config : fromJson(ConfigSchema, config);
   }
   capabilityId() {
     return this._capabilityId;
@@ -6229,10 +6229,10 @@ class CronTrigger {
     return this._method;
   }
   outputSchema() {
-    return PayloadSchema2;
+    return PayloadSchema;
   }
   configAsAny() {
-    return anyPack(ConfigSchema2, this.config);
+    return anyPack(ConfigSchema, this.config);
   }
   adapt(rawOutput) {
     return rawOutput;
@@ -11225,6 +11225,9 @@ function simpleDescriptor(agg) {
 function median() {
   return new ConsensusFieldAggregation(simpleDescriptor(AggregationType.MEDIAN));
 }
+function identical() {
+  return new ConsensusFieldAggregation(simpleDescriptor(AggregationType.IDENTICAL));
+}
 
 class ConsensusFieldAggregation {
   fieldDescriptor;
@@ -16124,456 +16127,1244 @@ var sendErrorResponse = (error) => {
   }
   hostBindings.sendResponse(payload);
 };
+var DEFAULT_SECRET_NAMESPACES = ["env", "default", "workflow"];
+var asConfigRecord = (runtime2) => runtime2.config ?? {};
+var readFromConfig = (runtime2, key) => {
+  const value2 = asConfigRecord(runtime2)[key];
+  if (typeof value2 !== "string") {
+    return;
+  }
+  const trimmed = value2.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+};
+var readFromSecrets = (runtime2, key, namespaces) => {
+  for (const namespace of namespaces) {
+    try {
+      const secret = runtime2.getSecret({ id: key, namespace }).result();
+      const value2 = secret.value?.trim();
+      if (value2) {
+        return value2;
+      }
+    } catch {}
+  }
+  return;
+};
+var requireSetting = (runtime2, key, namespaces = DEFAULT_SECRET_NAMESPACES) => {
+  const configValue = readFromConfig(runtime2, key);
+  if (configValue) {
+    return configValue;
+  }
+  const secretValue = readFromSecrets(runtime2, key, namespaces);
+  if (secretValue) {
+    return secretValue;
+  }
+  throw new Error(`missing required setting "${key}" (config or secrets namespace: ${namespaces.join(", ")})`);
+};
+var optionalSetting = (runtime2, key, defaultValue, namespaces = DEFAULT_SECRET_NAMESPACES) => {
+  const configValue = readFromConfig(runtime2, key);
+  if (configValue) {
+    return configValue;
+  }
+  const secretValue = readFromSecrets(runtime2, key, namespaces);
+  if (secretValue) {
+    return secretValue;
+  }
+  return defaultValue;
+};
+var textEncoder = new TextEncoder;
+var textDecoder = new TextDecoder;
+var classificationSchema = exports_external.object({
+  complianceFlags: exports_external.array(exports_external.string()).default([]),
+  riskTier: exports_external.enum(["low", "medium", "high"]),
+  recommendedPolicy: exports_external.enum(["allow", "review", "deny"]),
+  confidence: exports_external.number().min(0).max(1)
+});
+var openAiResponseSchema = exports_external.object({
+  choices: exports_external.array(exports_external.object({
+    message: exports_external.object({
+      content: exports_external.string().nullable().optional()
+    })
+  })).min(1)
+});
+var strictOutputSchema = {
+  type: "object",
+  additionalProperties: false,
+  required: ["complianceFlags", "riskTier", "recommendedPolicy", "confidence"],
+  properties: {
+    complianceFlags: {
+      type: "array",
+      items: { type: "string" }
+    },
+    riskTier: { type: "string", enum: ["low", "medium", "high"] },
+    recommendedPolicy: { type: "string", enum: ["allow", "review", "deny"] },
+    confidence: { type: "number", minimum: 0, maximum: 1 }
+  }
+};
+var parseJsonBody = (body) => {
+  const raw = typeof body === "string" ? body : textDecoder.decode(body);
+  if (!raw.trim()) {
+    throw new Error("empty response body");
+  }
+  try {
+    return JSON.parse(raw);
+  } catch {
+    throw new Error("invalid JSON response");
+  }
+};
+var getOpenAIConfig = (runtime2) => ({
+  apiKey: requireSetting(runtime2, "OPENAI_API_KEY"),
+  model: optionalSetting(runtime2, "OPENAI_MODEL", "gpt-4o-mini"),
+  baseUrl: optionalSetting(runtime2, "OPENAI_BASE_URL", "https://api.openai.com/v1")
+});
+var toBase64 = (input) => Buffer.from(input).toString("base64");
+var classifyListingPolicy = (runtime2, listing) => {
+  const config = getOpenAIConfig(runtime2);
+  const httpClient = new ClientCapability2;
+  const url = `${config.baseUrl.replace(/\/+$/, "")}/chat/completions`;
+  const sendHttp = httpClient.sendRequest(runtime2, (sendRequester, request) => {
+    const response2 = sendRequester.sendRequest(request).result();
+    return {
+      statusCode: response2.statusCode,
+      body: textDecoder.decode(response2.body)
+    };
+  }, ConsensusAggregationByFields({
+    statusCode: median,
+    body: identical
+  }));
+  const systemPrompt = "You are a commerce policy classifier. Return strict JSON only. " + "Assess policy/compliance risks for a digital product listing.";
+  const userPayload = {
+    listing,
+    instruction: "Classify this listing and return complianceFlags, riskTier, recommendedPolicy, confidence."
+  };
+  runtime2.log("CHECK: openai classification start");
+  const response = sendHttp({
+    url,
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${config.apiKey}`
+    },
+    body: toBase64(textEncoder.encode(JSON.stringify({
+      model: config.model,
+      temperature: 0,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: JSON.stringify(userPayload) }
+      ],
+      response_format: {
+        type: "json_schema",
+        json_schema: {
+          name: "listing_policy_response",
+          strict: true,
+          schema: strictOutputSchema
+        }
+      }
+    })))
+  }).result();
+  runtime2.log(`CHECK: openai classification completed status=${response.statusCode}`);
+  if (response.statusCode < 200 || response.statusCode >= 300) {
+    throw new Error(`openai classification failed closed: status ${response.statusCode}`);
+  }
+  const parsed = openAiResponseSchema.parse(parseJsonBody(response.body));
+  const content = parsed.choices[0]?.message?.content;
+  if (!content) {
+    throw new Error("openai classification failed closed: missing output content");
+  }
+  let jsonContent;
+  try {
+    jsonContent = JSON.parse(content);
+  } catch {
+    throw new Error("openai classification failed closed: malformed JSON content");
+  }
+  return classificationSchema.parse(jsonContent);
+};
+var textEncoder2 = new TextEncoder;
+var textDecoder2 = new TextDecoder;
+var insertOneResponseSchema = exports_external.object({
+  insertedId: exports_external.unknown().optional()
+});
+var findResponseSchema = exports_external.object({
+  documents: exports_external.array(exports_external.record(exports_external.unknown())).default([])
+});
+var updateOneResponseSchema = exports_external.object({
+  matchedCount: exports_external.number().int().nonnegative().default(0),
+  modifiedCount: exports_external.number().int().nonnegative().default(0),
+  upsertedId: exports_external.unknown().optional()
+});
+var retryableStatusCodes = new Set([408, 425, 429, 500, 502, 503, 504]);
+var stripTrailingSlash = (value2) => value2.replace(/\/+$/, "");
+var toBase642 = (input) => Buffer.from(input).toString("base64");
+var readJson = (body) => {
+  const raw = typeof body === "string" ? body : textDecoder2.decode(body);
+  if (!raw.trim()) {
+    return {};
+  }
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return { raw };
+  }
+};
+var getMongoConfig = (runtime2) => ({
+  baseUrl: stripTrailingSlash(optionalSetting(runtime2, "MONGODB_DB_API_URL", "http://localhost:3000/api/db")),
+  apiKey: optionalSetting(runtime2, "MONGODB_DB_API_KEY", ""),
+  database: optionalSetting(runtime2, "MONGODB_DATABASE", "creon_store"),
+  maxRetries: Number.parseInt(optionalSetting(runtime2, "MONGODB_MAX_RETRIES", "3"), 10)
+});
+var executeMongoAction = (runtime2, action, payload) => {
+  const { baseUrl, apiKey, maxRetries } = getMongoConfig(runtime2);
+  const httpClient = new ClientCapability2;
+  const retries = Number.isFinite(maxRetries) && maxRetries > 0 ? maxRetries : 3;
+  const sendHttp = httpClient.sendRequest(runtime2, (sendRequester, request) => {
+    const response = sendRequester.sendRequest(request).result();
+    return {
+      statusCode: response.statusCode,
+      body: textDecoder2.decode(response.body)
+    };
+  }, ConsensusAggregationByFields({
+    statusCode: median,
+    body: identical
+  }));
+  let lastError;
+  for (let attempt = 1;attempt <= retries; attempt += 1) {
+    runtime2.log(`CHECK: mongodb call start action=${action} attempt=${attempt}`);
+    try {
+      const response = sendHttp({
+        url: `${baseUrl}/${action}`,
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          ...apiKey ? { "x-db-api-key": apiKey } : {}
+        },
+        body: toBase642(textEncoder2.encode(JSON.stringify(payload)))
+      }).result();
+      runtime2.log(`CHECK: mongodb call completed action=${action} status=${response.statusCode}`);
+      const parsedBody = readJson(response.body);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return parsedBody;
+      }
+      const message = `mongodb ${action} failed with status ${response.statusCode}`;
+      const shouldRetry = retryableStatusCodes.has(response.statusCode) && attempt < retries;
+      if (!shouldRetry) {
+        throw new Error(`${message}: ${JSON.stringify(parsedBody)}`);
+      }
+      lastError = new Error(message);
+      runtime2.log(`CHECK: mongodb retry action=${action} nextAttempt=${attempt + 1}`);
+    } catch (error) {
+      const shouldRetry = attempt < retries;
+      lastError = error;
+      if (!shouldRetry) {
+        throw new Error(`mongodb ${action} failed after ${attempt} attempt(s): ${String(error)}`);
+      }
+      runtime2.log(`CHECK: mongodb retry action=${action} nextAttempt=${attempt + 1}`);
+    }
+  }
+  throw new Error(`mongodb ${action} failed: ${String(lastError)}`);
+};
+var insertOne = (runtime2, input) => {
+  const config = getMongoConfig(runtime2);
+  const response = executeMongoAction(runtime2, "insertOne", {
+    database: input.database ?? config.database,
+    collection: input.collection,
+    document: input.document
+  });
+  return insertOneResponseSchema.parse(response);
+};
+var find = (runtime2, input) => {
+  const config = getMongoConfig(runtime2);
+  const response = executeMongoAction(runtime2, "find", {
+    database: input.database ?? config.database,
+    collection: input.collection,
+    filter: input.filter ?? {},
+    projection: input.projection,
+    sort: input.sort,
+    limit: input.limit
+  });
+  return findResponseSchema.parse(response);
+};
+var updateOne = (runtime2, input) => {
+  const config = getMongoConfig(runtime2);
+  const response = executeMongoAction(runtime2, "updateOne", {
+    database: input.database ?? config.database,
+    collection: input.collection,
+    filter: input.filter,
+    update: input.update,
+    upsert: input.upsert ?? false
+  });
+  return updateOneResponseSchema.parse(response);
+};
+var checksum = (value2) => {
+  let hash2 = 5381;
+  for (let i2 = 0;i2 < value2.length; i2 += 1) {
+    hash2 = hash2 * 33 ^ value2.charCodeAt(i2);
+  }
+  return (hash2 >>> 0).toString(16);
+};
+var buildPolicyArtifact = (policyOutput, llmOutput) => {
+  const policyRaw = JSON.stringify(policyOutput);
+  const llmRaw = JSON.stringify(llmOutput);
+  const policyHash = checksum(policyRaw);
+  const llmHash = checksum(llmRaw);
+  const artifactHash = checksum(`${policyHash}:${llmHash}`);
+  return { policyHash, llmHash, artifactHash };
+};
+var blockedKeywords = [
+  "stolen",
+  "counterfeit",
+  "fake passport",
+  "hacking service",
+  "malware",
+  "credit card dump",
+  "exploit kit"
+];
+var riskyPhrases = [
+  "guaranteed profit",
+  "double your money",
+  "risk free return",
+  "100% guaranteed"
+];
+var toNumber = (amount) => {
+  const parsed = Number.parseFloat(amount);
+  return Number.isFinite(parsed) ? parsed : Number.NaN;
+};
+var evaluateDeterministicPolicy = (listing) => {
+  const title = listing.title.toLowerCase();
+  const description = listing.description.toLowerCase();
+  const haystack = `${title}
+${description}`;
+  const flags = [];
+  for (const keyword of blockedKeywords) {
+    if (haystack.includes(keyword)) {
+      flags.push(`blocked_keyword:${keyword}`);
+    }
+  }
+  for (const phrase of riskyPhrases) {
+    if (haystack.includes(phrase)) {
+      flags.push(`scam_phrase:${phrase}`);
+    }
+  }
+  const amount = toNumber(listing.pricing.amount);
+  if (Number.isFinite(amount) && amount > 1e4) {
+    flags.push("price_outlier");
+  }
+  if (flags.some((f) => f.startsWith("blocked_keyword"))) {
+    return { allow: false, reasonCode: "POLICY_DENY_DISALLOWED_GOODS", flags };
+  }
+  if (flags.some((f) => f.startsWith("scam_phrase")) && flags.includes("price_outlier")) {
+    return { allow: false, reasonCode: "POLICY_DENY_SCAM_PATTERN", flags };
+  }
+  return { allow: true, reasonCode: "POLICY_ALLOW", flags };
+};
+var deliverySchema = exports_external.object({
+  type: exports_external.enum(["download", "api", "license", "content_unlock"]),
+  format: exports_external.enum(["pdf", "zip", "json", "key", "html", "other"]),
+  access: exports_external.enum(["direct", "gated"]),
+  restoreSupported: exports_external.boolean().default(true)
+});
+var pricingSchema = exports_external.object({
+  currency: exports_external.string().min(1),
+  chain: exports_external.string().min(1),
+  amount: exports_external.string().min(1)
+});
+var policiesSchema = exports_external.object({
+  refundPolicy: exports_external.enum(["no_refunds", "limited", "standard"]).optional(),
+  regionDenylist: exports_external.array(exports_external.string()).optional(),
+  maxPurchasesPerBuyer: exports_external.number().int().positive().optional()
+}).optional();
+var listingSchema = exports_external.object({
+  productId: exports_external.string().min(1),
+  merchant: exports_external.string().startsWith("0x"),
+  title: exports_external.string().min(3),
+  description: exports_external.string().min(20),
+  category: exports_external.enum([
+    "template",
+    "download",
+    "report",
+    "api_credits",
+    "license_key",
+    "unlock"
+  ]),
+  delivery: deliverySchema,
+  pricing: pricingSchema,
+  tags: exports_external.array(exports_external.string()).default([]),
+  policies: policiesSchema
+});
+var createListingInputSchema = exports_external.object({
+  action: exports_external.literal("createListing"),
+  listing: listingSchema
+});
+var listInputSchema = exports_external.object({
+  action: exports_external.literal("list"),
+  limit: exports_external.number().int().positive().max(100).optional(),
+  merchant: exports_external.string().startsWith("0x").optional(),
+  includeInactive: exports_external.boolean().optional()
+});
+var searchInputSchema = exports_external.object({
+  action: exports_external.literal("search"),
+  query: exports_external.string().optional(),
+  tags: exports_external.array(exports_external.string()).optional(),
+  limit: exports_external.number().int().positive().max(100).optional()
+});
+var x402ProofSchema = exports_external.object({
+  paymentRequired: exports_external.unknown(),
+  paymentSignature: exports_external.unknown(),
+  settlementTx: exports_external.object({
+    txHash: exports_external.string().min(1),
+    chainId: exports_external.union([exports_external.string().min(1), exports_external.number().int().positive()]),
+    from: exports_external.string().optional(),
+    to: exports_external.string().optional(),
+    amount: exports_external.union([exports_external.string(), exports_external.number()]).optional(),
+    token: exports_external.string().optional()
+  }),
+  network: exports_external.string().optional(),
+  asset: exports_external.string().optional()
+});
+var txProofSchema = exports_external.object({
+  chainId: exports_external.union([exports_external.string().min(1), exports_external.number().int().positive()]),
+  txHash: exports_external.string().min(1),
+  payer: exports_external.string().min(1),
+  payTo: exports_external.string().min(1),
+  amount: exports_external.union([exports_external.string(), exports_external.number()]),
+  token: exports_external.string().min(1)
+});
+var proofSchema = exports_external.union([
+  exports_external.object({ x402: x402ProofSchema }),
+  exports_external.object({ tx: txProofSchema }),
+  x402ProofSchema,
+  txProofSchema
+]);
+var purchaseInputSchema = exports_external.object({
+  action: exports_external.literal("purchase"),
+  intentId: exports_external.string().min(1),
+  buyer: exports_external.string().startsWith("0x"),
+  merchant: exports_external.string().startsWith("0x"),
+  productId: exports_external.string().min(1),
+  pricing: pricingSchema,
+  feeBps: exports_external.number().int().nonnegative().max(1e4).default(100),
+  proof: proofSchema
+});
+var restoreInputSchema = exports_external.object({
+  action: exports_external.literal("restore"),
+  buyer: exports_external.string().startsWith("0x"),
+  productId: exports_external.string().min(1)
+});
+var refundInputSchema = exports_external.object({
+  action: exports_external.literal("refund"),
+  intentId: exports_external.string().optional(),
+  buyer: exports_external.string().startsWith("0x"),
+  productId: exports_external.string().min(1),
+  reason: exports_external.string().optional()
+});
+var governanceInputSchema = exports_external.object({
+  action: exports_external.literal("governance"),
+  actor: exports_external.string().startsWith("0x"),
+  productId: exports_external.string().min(1),
+  status: exports_external.enum(["ACTIVE", "PAUSED", "DISCONTINUED", "BANNED"])
+});
+var verifyInputSchema = exports_external.object({
+  action: exports_external.literal("verify"),
+  proof: proofSchema
+});
+var decideInputSchema = exports_external.object({
+  action: exports_external.literal("decide"),
+  allow: exports_external.boolean().optional(),
+  reasonCode: exports_external.string().optional(),
+  context: exports_external.record(exports_external.unknown()).optional()
+});
+var validateCreateListingInput = (input) => createListingInputSchema.parse(input);
+var validateListInput = (input) => listInputSchema.parse(input);
+var validateSearchInput = (input) => searchInputSchema.parse(input);
+var validatePurchaseInput = (input) => purchaseInputSchema.parse(input);
+var validateRestoreInput = (input) => restoreInputSchema.parse(input);
+var validateRefundInput = (input) => refundInputSchema.parse(input);
+var validateGovernanceInput = (input) => governanceInputSchema.parse(input);
+var validateVerifyInput = (input) => verifyInputSchema.parse(input);
+var validateDecideInput = (input) => decideInputSchema.parse(input);
+var handleCreateListing = (runtime2, input) => {
+  const parsed = validateCreateListingInput(input);
+  const enablePolicyChecks = optionalSetting(runtime2, "ENABLE_POLICY_CHECKS", "false").toLowerCase() === "true";
+  let deterministic = null;
+  let llm = null;
+  let artifacts = null;
+  if (enablePolicyChecks) {
+    runtime2.log("CHECK: policy evaluated");
+    deterministic = evaluateDeterministicPolicy(parsed.listing);
+    if (!deterministic.allow) {
+      return {
+        ok: false,
+        action: "createListing",
+        reasonCode: deterministic.reasonCode,
+        message: "listing denied by deterministic policy",
+        data: { flags: deterministic.flags }
+      };
+    }
+    llm = classifyListingPolicy(runtime2, {
+      title: parsed.listing.title,
+      description: parsed.listing.description,
+      category: parsed.listing.category,
+      pricing: parsed.listing.pricing,
+      tags: parsed.listing.tags,
+      merchant: parsed.listing.merchant
+    });
+    runtime2.log("CHECK: llm classification completed");
+    if (llm.recommendedPolicy === "deny") {
+      return {
+        ok: false,
+        action: "createListing",
+        reasonCode: "POLICY_DENY_LLM",
+        message: "listing denied by classifier",
+        data: { llm }
+      };
+    }
+    artifacts = buildPolicyArtifact({ deterministic }, {
+      complianceFlags: llm.complianceFlags,
+      riskTier: llm.riskTier,
+      recommendedPolicy: llm.recommendedPolicy,
+      confidence: llm.confidence
+    });
+  } else {
+    runtime2.log("CHECK: policy checks skipped");
+  }
+  const listingDocument = {
+    ...parsed.listing,
+    status: "ACTIVE",
+    createdAt: runtime2.now().toISOString(),
+    updatedAt: runtime2.now().toISOString()
+  };
+  if (deterministic) {
+    listingDocument.deterministicPolicy = deterministic;
+  }
+  if (llm) {
+    listingDocument.llmPolicy = llm;
+  }
+  if (artifacts) {
+    listingDocument.artifacts = artifacts;
+  }
+  const writeResult = insertOne(runtime2, {
+    collection: "products",
+    document: listingDocument
+  });
+  runtime2.log("CHECK: mongodb write ok");
+  const responseData = {
+    productId: parsed.listing.productId,
+    riskTier: llm?.riskTier ?? "not_checked",
+    policyChecksEnabled: enablePolicyChecks
+  };
+  if (typeof writeResult.insertedId === "string") {
+    responseData.insertedId = writeResult.insertedId;
+  }
+  return {
+    ok: true,
+    action: "createListing",
+    reasonCode: "ALLOW",
+    message: "listing created",
+    data: responseData
+  };
+};
+var isObject2 = (value2) => typeof value2 === "object" && value2 !== null && !Array.isArray(value2);
+var stripNullish = (value2) => {
+  if (value2 === null || value2 === undefined) {
+    return;
+  }
+  if (Array.isArray(value2)) {
+    const cleaned = value2.map((item) => stripNullish(item)).filter((item) => item !== undefined);
+    return cleaned;
+  }
+  if (isObject2(value2)) {
+    const out = {};
+    for (const [key, item] of Object.entries(value2)) {
+      const cleaned = stripNullish(item);
+      if (cleaned !== undefined) {
+        out[key] = cleaned;
+      }
+    }
+    return out;
+  }
+  return value2;
+};
+var toJsonSafeValue = (value2) => {
+  const cleaned = stripNullish(value2);
+  return JSON.parse(JSON.stringify(cleaned));
+};
+var handleList = (runtime2, input) => {
+  const parsed = validateListInput(input);
+  const filter = {};
+  if (!parsed.includeInactive) {
+    filter.status = { $ne: "BANNED" };
+  }
+  if (parsed.merchant) {
+    filter.merchant = parsed.merchant;
+  }
+  const response = find(runtime2, {
+    collection: "products",
+    filter,
+    sort: { createdAt: -1 },
+    limit: parsed.limit ?? 20
+  });
+  runtime2.log("CHECK: mongodb read ok");
+  return {
+    ok: true,
+    action: "list",
+    reasonCode: "LIST_OK",
+    message: "listings returned",
+    data: {
+      count: response.documents.length,
+      items: stripNullish(response.documents)
+    }
+  };
+};
+var handleSearch = (runtime2, input) => {
+  const parsed = validateSearchInput(input);
+  const clauses = [{ status: { $ne: "BANNED" } }];
+  if (parsed.query && parsed.query.trim().length > 0) {
+    const q = parsed.query.trim();
+    clauses.push({
+      $or: [
+        { title: { $regex: q, $options: "i" } },
+        { description: { $regex: q, $options: "i" } }
+      ]
+    });
+  }
+  if (parsed.tags && parsed.tags.length > 0) {
+    clauses.push({ tags: { $in: parsed.tags } });
+  }
+  const response = find(runtime2, {
+    collection: "products",
+    filter: clauses.length > 1 ? { $and: clauses } : clauses[0],
+    sort: { createdAt: -1 },
+    limit: parsed.limit ?? 20
+  });
+  runtime2.log("CHECK: mongodb read ok");
+  return {
+    ok: true,
+    action: "search",
+    reasonCode: "SEARCH_OK",
+    message: "search results returned",
+    data: {
+      count: response.documents.length,
+      items: stripNullish(response.documents)
+    }
+  };
+};
 var zeroAddress = "0x0000000000000000000000000000000000000000";
 init_decodeFunctionResult();
 init_encodeFunctionData();
-var BalanceReader = [
+var EntitlementRegistry = [
   {
-    inputs: [{ internalType: "address[]", name: "addresses", type: "address[]" }],
-    name: "getNativeBalances",
-    outputs: [{ internalType: "uint256[]", name: "", type: "uint256[]" }],
+    type: "function",
     stateMutability: "view",
-    type: "function"
+    name: "hasEntitlement",
+    inputs: [
+      { name: "buyer", type: "address" },
+      { name: "productId", type: "string" }
+    ],
+    outputs: [{ name: "", type: "bool" }]
   },
   {
-    inputs: [],
-    name: "typeAndVersion",
-    outputs: [{ internalType: "string", name: "", type: "string" }],
-    stateMutability: "view",
-    type: "function"
+    type: "function",
+    stateMutability: "nonpayable",
+    name: "recordEntitlement",
+    inputs: [
+      { name: "buyer", type: "address" },
+      { name: "productId", type: "string" }
+    ],
+    outputs: []
   }
 ];
-var IERC20 = [
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "owner",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "spender",
-        type: "address"
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "value",
-        type: "uint256"
-      }
-    ],
-    name: "Approval",
-    type: "event"
-  },
-  {
-    anonymous: false,
-    inputs: [
-      { indexed: true, internalType: "address", name: "from", type: "address" },
-      { indexed: true, internalType: "address", name: "to", type: "address" },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "value",
-        type: "uint256"
-      }
-    ],
-    name: "Transfer",
-    type: "event"
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "owner", type: "address" },
-      { internalType: "address", name: "spender", type: "address" }
-    ],
-    name: "allowance",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "spender", type: "address" },
-      { internalType: "uint256", name: "amount", type: "uint256" }
-    ],
-    name: "approve",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [{ internalType: "address", name: "account", type: "address" }],
-    name: "balanceOf",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "totalSupply",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "recipient", type: "address" },
-      { internalType: "uint256", name: "amount", type: "uint256" }
-    ],
-    name: "transfer",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "sender", type: "address" },
-      { internalType: "address", name: "recipient", type: "address" },
-      { internalType: "uint256", name: "amount", type: "uint256" }
-    ],
-    name: "transferFrom",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
-var MessageEmitter = [
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "emitter",
-        type: "address"
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "timestamp",
-        type: "uint256"
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "message",
-        type: "string"
-      }
-    ],
-    name: "MessageEmitted",
-    type: "event"
-  },
-  {
-    inputs: [{ internalType: "string", name: "message", type: "string" }],
-    name: "emitMessage",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  },
-  {
-    inputs: [{ internalType: "address", name: "emitter", type: "address" }],
-    name: "getLastMessage",
-    outputs: [{ internalType: "string", name: "", type: "string" }],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "emitter", type: "address" },
-      { internalType: "uint256", name: "timestamp", type: "uint256" }
-    ],
-    name: "getMessage",
-    outputs: [{ internalType: "string", name: "", type: "string" }],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "typeAndVersion",
-    outputs: [{ internalType: "string", name: "", type: "string" }],
-    stateMutability: "view",
-    type: "function"
-  }
-];
-var ReserveManager = [
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "requestId",
-        type: "uint256"
-      }
-    ],
-    name: "RequestReserveUpdate",
-    type: "event"
-  },
-  {
-    inputs: [],
-    name: "lastTotalMinted",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [],
-    name: "lastTotalReserve",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function"
-  },
-  {
-    inputs: [
-      {
-        components: [
-          { internalType: "uint256", name: "totalMinted", type: "uint256" },
-          { internalType: "uint256", name: "totalReserve", type: "uint256" }
-        ],
-        internalType: "struct UpdateReserves",
-        name: "updateReserves",
-        type: "tuple"
-      }
-    ],
-    name: "updateReserves",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function"
-  }
-];
-var configSchema = exports_external.object({
-  schedule: exports_external.string(),
-  url: exports_external.string(),
-  evms: exports_external.array(exports_external.object({
-    tokenAddress: exports_external.string(),
-    porAddress: exports_external.string(),
-    proxyAddress: exports_external.string(),
-    balanceReaderAddress: exports_external.string(),
-    messageEmitterAddress: exports_external.string(),
-    chainSelectorName: exports_external.string(),
-    gasLimit: exports_external.string()
-  }))
-});
-var safeJsonStringify = (obj) => JSON.stringify(obj, (_, value2) => typeof value2 === "bigint" ? value2.toString() : value2, 2);
-var fetchReserveInfo = (sendRequester, config) => {
-  const response = sendRequester.sendRequest({ method: "GET", url: config.url }).result();
-  if (response.statusCode !== 200) {
-    throw new Error(`HTTP request failed with status: ${response.statusCode}`);
-  }
-  const responseText = Buffer.from(response.body).toString("utf-8");
-  const porResp = JSON.parse(responseText);
-  if (porResp.ripcord) {
-    throw new Error("ripcord is true");
-  }
-  return {
-    lastUpdated: new Date(porResp.updatedAt),
-    totalReserve: porResp.totalToken
-  };
-};
-var fetchNativeTokenBalance = (runtime2, evmConfig, tokenHolderAddress) => {
+var getCommerceChainSelectorName = (runtime2) => optionalSetting(runtime2, "COMMERCE_CHAIN_SELECTOR_NAME", "ethereum-testnet-sepolia-base-1");
+var getEntitlementRegistryAddress = (runtime2) => requireSetting(runtime2, "ENTITLEMENT_REGISTRY_ADDRESS");
+var resolveClient = (params) => {
   const network248 = getNetwork({
     chainFamily: "evm",
-    chainSelectorName: evmConfig.chainSelectorName,
-    isTestnet: true
+    chainSelectorName: params.chainSelectorName,
+    isTestnet: params.isTestnet ?? true
   });
   if (!network248) {
-    throw new Error(`Network not found for chain selector name: ${evmConfig.chainSelectorName}`);
+    throw new Error(`unsupported chain selector name: ${params.chainSelectorName}`);
   }
-  const evmClient = new ClientCapability(network248.chainSelector.selector);
-  const callData = encodeFunctionData({
-    abi: BalanceReader,
-    functionName: "getNativeBalances",
-    args: [[tokenHolderAddress]]
-  });
-  const contractCall = evmClient.callContract(runtime2, {
+  return new ClientCapability(network248.chainSelector.selector);
+};
+var callContractRead = (runtime2, params) => {
+  runtime2.log(`CHECK: chain read start chain=${params.chainSelectorName}`);
+  const client = resolveClient(params);
+  const reply = client.callContract(runtime2, {
     call: encodeCallMsg({
-      from: zeroAddress,
-      to: evmConfig.balanceReaderAddress,
-      data: callData
+      from: params.from ?? zeroAddress,
+      to: params.to,
+      data: params.data
     }),
     blockNumber: LAST_FINALIZED_BLOCK_NUMBER
   }).result();
-  const balances = decodeFunctionResult({
-    abi: BalanceReader,
-    functionName: "getNativeBalances",
-    data: bytesToHex(contractCall.data)
-  });
-  if (!balances || balances.length === 0) {
-    throw new Error("No balances returned from contract");
-  }
-  return balances[0];
+  runtime2.log(`CHECK: chain read completed chain=${params.chainSelectorName}`);
+  return bytesToHex(reply.data);
 };
-var getTotalSupply = (runtime2) => {
-  const evms = runtime2.config.evms;
-  let totalSupply = 0n;
-  for (const evmConfig of evms) {
-    const network248 = getNetwork({
-      chainFamily: "evm",
-      chainSelectorName: evmConfig.chainSelectorName,
-      isTestnet: true
-    });
-    if (!network248) {
-      throw new Error(`Network not found for chain selector name: ${evmConfig.chainSelectorName}`);
-    }
-    const evmClient = new ClientCapability(network248.chainSelector.selector);
-    const callData = encodeFunctionData({
-      abi: IERC20,
-      functionName: "totalSupply"
-    });
-    const contractCall = evmClient.callContract(runtime2, {
-      call: encodeCallMsg({
-        from: zeroAddress,
-        to: evmConfig.tokenAddress,
-        data: callData
-      }),
-      blockNumber: LAST_FINALIZED_BLOCK_NUMBER
-    }).result();
-    const supply = decodeFunctionResult({
-      abi: IERC20,
-      functionName: "totalSupply",
-      data: bytesToHex(contractCall.data)
-    });
-    totalSupply += supply;
-  }
-  return totalSupply;
-};
-var updateReserves = (runtime2, totalSupply, totalReserveScaled) => {
-  const evmConfig = runtime2.config.evms[0];
-  const network248 = getNetwork({
-    chainFamily: "evm",
-    chainSelectorName: evmConfig.chainSelectorName,
-    isTestnet: true
-  });
-  if (!network248) {
-    throw new Error(`Network not found for chain selector name: ${evmConfig.chainSelectorName}`);
-  }
-  const evmClient = new ClientCapability(network248.chainSelector.selector);
-  runtime2.log(`Updating reserves totalSupply ${totalSupply.toString()} totalReserveScaled ${totalReserveScaled.toString()}`);
-  const callData = encodeFunctionData({
-    abi: ReserveManager,
-    functionName: "updateReserves",
-    args: [
-      {
-        totalMinted: totalSupply,
-        totalReserve: totalReserveScaled
-      }
-    ]
-  });
-  const reportResponse = runtime2.report({
-    encodedPayload: hexToBase64(callData),
+var writeContractReport = (runtime2, params) => {
+  runtime2.log(`CHECK: chain write start chain=${params.chainSelectorName}`);
+  const client = resolveClient(params);
+  const configuredGasLimit = optionalSetting(runtime2, "CHAIN_GAS_LIMIT", "1000000");
+  const gasLimit = params.gasLimit ?? configuredGasLimit;
+  const report2 = runtime2.report({
+    encodedPayload: hexToBase64(params.callData),
     encoderName: "evm",
     signingAlgo: "ecdsa",
     hashingAlgo: "keccak256"
   }).result();
-  const resp = evmClient.writeReport(runtime2, {
-    receiver: evmConfig.proxyAddress,
-    report: reportResponse,
-    gasConfig: {
-      gasLimit: evmConfig.gasLimit
+  const result = client.writeReport(runtime2, {
+    receiver: params.receiver,
+    report: report2,
+    gasConfig: { gasLimit }
+  }).result();
+  if (result.txStatus !== TxStatus.SUCCESS) {
+    throw new Error(`chain write failed on ${params.chainSelectorName}: ${result.errorMessage || result.txStatus}`);
+  }
+  const txHash = bytesToHex(result.txHash ?? new Uint8Array(32));
+  runtime2.log(`CHECK: chain write completed chain=${params.chainSelectorName} txHash=${txHash}`);
+  return { txHash };
+};
+var hasEntitlementOnchain = (runtime2, buyer, productId) => {
+  const chainSelectorName = getCommerceChainSelectorName(runtime2);
+  const registry2 = getEntitlementRegistryAddress(runtime2);
+  const data = encodeFunctionData({
+    abi: EntitlementRegistry,
+    functionName: "hasEntitlement",
+    args: [buyer, productId]
+  });
+  const raw = callContractRead(runtime2, {
+    chainSelectorName,
+    to: registry2,
+    data
+  });
+  return decodeFunctionResult({
+    abi: EntitlementRegistry,
+    functionName: "hasEntitlement",
+    data: raw
+  });
+};
+var recordEntitlementOnchain = (runtime2, buyer, productId) => {
+  const chainSelectorName = getCommerceChainSelectorName(runtime2);
+  const registry2 = getEntitlementRegistryAddress(runtime2);
+  const data = encodeFunctionData({
+    abi: EntitlementRegistry,
+    functionName: "recordEntitlement",
+    args: [buyer, productId]
+  });
+  return writeContractReport(runtime2, {
+    chainSelectorName,
+    receiver: registry2,
+    callData: data
+  });
+};
+var x402ProofSchema2 = exports_external.object({
+  paymentRequired: exports_external.unknown(),
+  paymentSignature: exports_external.unknown(),
+  settlementTx: exports_external.object({
+    txHash: exports_external.string().min(1),
+    chainId: exports_external.union([exports_external.string().min(1), exports_external.number().int().positive()]),
+    from: exports_external.string().min(1).optional(),
+    to: exports_external.string().min(1).optional(),
+    amount: exports_external.union([exports_external.string(), exports_external.number()]).optional(),
+    token: exports_external.string().optional()
+  }),
+  network: exports_external.string().optional(),
+  asset: exports_external.string().optional()
+});
+var txProofSchema2 = exports_external.object({
+  chainId: exports_external.union([exports_external.string().min(1), exports_external.number().int().positive()]),
+  txHash: exports_external.string().min(1),
+  payer: exports_external.string().min(1),
+  payTo: exports_external.string().min(1),
+  amount: exports_external.union([exports_external.string(), exports_external.number()]),
+  token: exports_external.string().min(1),
+  receiptLogs: exports_external.array(exports_external.unknown()).optional()
+});
+var anyProofSchema = exports_external.union([
+  exports_external.object({ x402: x402ProofSchema2 }),
+  exports_external.object({ tx: txProofSchema2 }),
+  x402ProofSchema2,
+  txProofSchema2
+]);
+var normalizeChainId = (value2) => String(value2);
+var normalizeAmount = (value2) => value2 === undefined ? undefined : String(value2);
+var computeFingerprint = (kind, chainId, txHash, payer, payTo, amount, token) => [
+  "proof",
+  kind,
+  chainId.toLowerCase(),
+  txHash.toLowerCase(),
+  payer.toLowerCase(),
+  payTo.toLowerCase(),
+  (amount ?? "").toLowerCase(),
+  (token ?? "").toLowerCase()
+].join(":");
+var normalizePaymentProof = (runtime2, proof) => {
+  runtime2.log("CHECK: x402 normalization start");
+  const parsed = anyProofSchema.parse(proof);
+  let normalized;
+  if ("x402" in parsed || "settlementTx" in parsed) {
+    const x402 = "x402" in parsed ? parsed.x402 : parsed;
+    const chainId = normalizeChainId(x402.settlementTx.chainId);
+    const txHash = x402.settlementTx.txHash;
+    const payer = x402.settlementTx.from ?? "";
+    const payTo = x402.settlementTx.to ?? "";
+    const amount = normalizeAmount(x402.settlementTx.amount);
+    const token = x402.settlementTx.token;
+    normalized = {
+      kind: "x402",
+      chainId,
+      txHash,
+      payer,
+      payTo,
+      amount,
+      token,
+      network: x402.network,
+      asset: x402.asset,
+      fingerprint: computeFingerprint("x402", chainId, txHash, payer, payTo, amount, token),
+      raw: x402
+    };
+  } else {
+    const tx = "tx" in parsed ? parsed.tx : parsed;
+    const chainId = normalizeChainId(tx.chainId);
+    const txHash = tx.txHash;
+    const payer = tx.payer;
+    const payTo = tx.payTo;
+    const amount = String(tx.amount);
+    const token = tx.token;
+    normalized = {
+      kind: "tx",
+      chainId,
+      txHash,
+      payer,
+      payTo,
+      amount,
+      token,
+      fingerprint: computeFingerprint("tx", chainId, txHash, payer, payTo, amount, token),
+      raw: tx
+    };
+  }
+  runtime2.log(`CHECK: x402 normalization completed kind=${normalized.kind}`);
+  return normalized;
+};
+var DEFAULT_COMMERCE_CHAIN = "base-sepolia";
+var DEFAULT_COMMERCE_CURRENCY = "USDC";
+var getAgentWalletAddress = (runtime2) => requireSetting(runtime2, "AGENT_WALLET_ADDRESS").toLowerCase();
+var validatePricingDefaults = (chain, currency) => {
+  if (chain.toLowerCase() !== DEFAULT_COMMERCE_CHAIN) {
+    return {
+      ok: false,
+      reasonCode: "UNSUPPORTED_CHAIN",
+      message: `only ${DEFAULT_COMMERCE_CHAIN} is supported`
+    };
+  }
+  if (currency.toUpperCase() !== DEFAULT_COMMERCE_CURRENCY) {
+    return {
+      ok: false,
+      reasonCode: "UNSUPPORTED_CURRENCY",
+      message: `only ${DEFAULT_COMMERCE_CURRENCY} is supported`
+    };
+  }
+  return { ok: true };
+};
+var toAmount = (value2) => {
+  const numeric = typeof value2 === "number" ? value2 : Number.parseFloat(value2);
+  if (!Number.isFinite(numeric) || numeric < 0) {
+    throw new Error("invalid amount");
+  }
+  return numeric;
+};
+var round6 = (value2) => Math.round(value2 * 1e6) / 1e6;
+var computeFeeAmount = (baseAmount, feeBps) => {
+  const base = toAmount(baseAmount);
+  return round6(base * feeBps / 1e4);
+};
+var computeTotalWithFee = (baseAmount, feeBps) => {
+  const base = toAmount(baseAmount);
+  return round6(base + computeFeeAmount(base, feeBps));
+};
+var verifyFeeAmount = (baseAmount, paidAmount, feeBps) => {
+  const expectedTotal = computeTotalWithFee(baseAmount, feeBps);
+  if (paidAmount === undefined) {
+    return { ok: false, expectedTotal };
+  }
+  const paidTotal = toAmount(paidAmount);
+  const delta = Math.abs(paidTotal - expectedTotal);
+  return {
+    ok: delta <= 0.000001,
+    expectedTotal,
+    paidTotal
+  };
+};
+var hasReplayFingerprint = (runtime2, fingerprint) => {
+  const res = find(runtime2, {
+    collection: "replay_store",
+    filter: { fingerprint },
+    limit: 1
+  });
+  return res.documents.length > 0;
+};
+var storeReplayFingerprint = (runtime2, fingerprint, payload) => {
+  updateOne(runtime2, {
+    collection: "replay_store",
+    filter: { fingerprint },
+    update: {
+      $setOnInsert: {
+        fingerprint,
+        ...payload,
+        createdAt: runtime2.now().toISOString()
+      }
+    },
+    upsert: true
+  });
+};
+var handlePurchase = (runtime2, input) => {
+  const parsed = validatePurchaseInput(input);
+  const pricingCheck = validatePricingDefaults(parsed.pricing.chain, parsed.pricing.currency);
+  if (!pricingCheck.ok) {
+    return {
+      ok: false,
+      action: "purchase",
+      reasonCode: pricingCheck.reasonCode,
+      message: pricingCheck.message || "unsupported commerce config"
+    };
+  }
+  const agentWallet = getAgentWalletAddress(runtime2);
+  if (parsed.merchant.toLowerCase() !== agentWallet) {
+    return {
+      ok: false,
+      action: "purchase",
+      reasonCode: "MERCHANT_MISMATCH",
+      message: "merchant must match agent wallet",
+      data: { merchant: parsed.merchant, agentWallet }
+    };
+  }
+  const normalized = normalizePaymentProof(runtime2, parsed.proof);
+  runtime2.log("CHECK: proof verified");
+  if (normalized.payTo && normalized.payTo.length > 0 && normalized.payTo.toLowerCase() !== agentWallet) {
+    return {
+      ok: false,
+      action: "purchase",
+      reasonCode: "PAYEE_MISMATCH",
+      message: "payment recipient must be agent wallet",
+      data: { payTo: normalized.payTo, agentWallet }
+    };
+  }
+  const feeCheck = verifyFeeAmount(parsed.pricing.amount, normalized.amount, parsed.feeBps);
+  if (!feeCheck.ok) {
+    return {
+      ok: false,
+      action: "purchase",
+      reasonCode: "FEE_MISMATCH",
+      message: "purchase amount does not include expected service fee",
+      data: {
+        expectedTotal: feeCheck.expectedTotal,
+        paidTotal: feeCheck.paidTotal
+      }
+    };
+  }
+  runtime2.log("CHECK: fee verified");
+  const duplicateProof = hasReplayFingerprint(runtime2, normalized.fingerprint);
+  const existingEntitlement = find(runtime2, {
+    collection: "entitlements",
+    filter: { buyer: parsed.buyer, productId: parsed.productId },
+    limit: 1
+  });
+  const hasLocalEntitlement = existingEntitlement.documents.length > 0;
+  const hasOnchainEntitlement = hasEntitlementOnchain(runtime2, parsed.buyer, parsed.productId);
+  const duplicatePurchase = duplicateProof || hasLocalEntitlement || hasOnchainEntitlement;
+  if (duplicatePurchase) {
+    updateOne(runtime2, {
+      collection: "refund_eligibility",
+      filter: { buyer: parsed.buyer, productId: parsed.productId },
+      update: {
+        $inc: { duplicateAttempts: 1 },
+        $set: {
+          buyer: parsed.buyer,
+          productId: parsed.productId,
+          merchant: parsed.merchant,
+          latestIntentId: parsed.intentId,
+          latestFingerprint: normalized.fingerprint,
+          updatedAt: runtime2.now().toISOString()
+        },
+        $setOnInsert: {
+          createdAt: runtime2.now().toISOString()
+        }
+      },
+      upsert: true
+    });
+    return {
+      ok: false,
+      action: "purchase",
+      reasonCode: "REFUND_ELIGIBLE_DUPLICATE_PURCHASE",
+      message: "duplicate purchase for same buyer and product is refund eligible",
+      data: { buyer: parsed.buyer, productId: parsed.productId }
+    };
+  }
+  storeReplayFingerprint(runtime2, normalized.fingerprint, {
+    intentId: parsed.intentId,
+    buyer: parsed.buyer,
+    merchant: parsed.merchant,
+    productId: parsed.productId,
+    proofKind: normalized.kind
+  });
+  runtime2.log("CHECK: replay stored");
+  const onchain = recordEntitlementOnchain(runtime2, parsed.buyer, parsed.productId);
+  updateOne(runtime2, {
+    collection: "entitlements",
+    filter: { buyer: parsed.buyer, productId: parsed.productId },
+    update: {
+      $setOnInsert: {
+        buyer: parsed.buyer,
+        merchant: parsed.merchant,
+        productId: parsed.productId,
+        intentId: parsed.intentId,
+        txHash: onchain.txHash,
+        grantedAt: runtime2.now().toISOString()
+      }
+    },
+    upsert: true
+  });
+  runtime2.log("CHECK: entitlement written");
+  insertOne(runtime2, {
+    collection: "purchases",
+    document: {
+      intentId: parsed.intentId,
+      buyer: parsed.buyer,
+      merchant: parsed.merchant,
+      productId: parsed.productId,
+      fingerprint: normalized.fingerprint,
+      proofKind: normalized.kind,
+      amount: normalized.amount ?? parsed.pricing.amount,
+      feeBps: parsed.feeBps,
+      txHash: onchain.txHash,
+      createdAt: runtime2.now().toISOString()
     }
-  }).result();
-  const txStatus = resp.txStatus;
-  if (txStatus !== TxStatus.SUCCESS) {
-    throw new Error(`Failed to write report: ${resp.errorMessage || txStatus}`);
-  }
-  const txHash = resp.txHash || new Uint8Array(32);
-  runtime2.log(`Write report transaction succeeded at txHash: ${bytesToHex(txHash)}`);
-  return txHash.toString();
-};
-var doPOR = (runtime2) => {
-  runtime2.log(`fetching por url ${runtime2.config.url}`);
-  const httpCapability = new ClientCapability2;
-  const reserveInfo = httpCapability.sendRequest(runtime2, fetchReserveInfo, ConsensusAggregationByFields({
-    lastUpdated: median,
-    totalReserve: median
-  }))(runtime2.config).result();
-  runtime2.log(`ReserveInfo ${safeJsonStringify(reserveInfo)}`);
-  const totalSupply = getTotalSupply(runtime2);
-  runtime2.log(`TotalSupply ${totalSupply.toString()}`);
-  const totalReserveScaled = BigInt(reserveInfo.totalReserve * 1000000000000000000);
-  runtime2.log(`TotalReserveScaled ${totalReserveScaled.toString()}`);
-  const nativeTokenBalance = fetchNativeTokenBalance(runtime2, runtime2.config.evms[0], runtime2.config.evms[0].tokenAddress);
-  runtime2.log(`NativeTokenBalance ${nativeTokenBalance.toString()}`);
-  updateReserves(runtime2, totalSupply, totalReserveScaled);
-  return reserveInfo.totalReserve.toString();
-};
-var getLastMessage = (runtime2, evmConfig, emitter) => {
-  const network248 = getNetwork({
-    chainFamily: "evm",
-    chainSelectorName: evmConfig.chainSelectorName,
-    isTestnet: true
   });
-  if (!network248) {
-    throw new Error(`Network not found for chain selector name: ${evmConfig.chainSelectorName}`);
-  }
-  const evmClient = new ClientCapability(network248.chainSelector.selector);
-  const callData = encodeFunctionData({
-    abi: MessageEmitter,
-    functionName: "getLastMessage",
-    args: [emitter]
-  });
-  const contractCall = evmClient.callContract(runtime2, {
-    call: encodeCallMsg({
-      from: zeroAddress,
-      to: evmConfig.messageEmitterAddress,
-      data: callData
-    }),
-    blockNumber: LAST_FINALIZED_BLOCK_NUMBER
-  }).result();
-  const message = decodeFunctionResult({
-    abi: MessageEmitter,
-    functionName: "getLastMessage",
-    data: bytesToHex(contractCall.data)
-  });
-  return message;
+  return {
+    ok: true,
+    action: "purchase",
+    reasonCode: "PURCHASE_SUCCESS",
+    message: "purchase recorded and entitlement granted",
+    data: {
+      buyer: parsed.buyer,
+      productId: parsed.productId,
+      fingerprint: normalized.fingerprint,
+      agentWallet,
+      txHash: onchain.txHash,
+      expectedTotal: feeCheck.expectedTotal
+    }
+  };
 };
-var onCronTrigger = (runtime2, payload) => {
-  if (!payload.scheduledExecutionTime) {
-    throw new Error("Scheduled execution time is required");
-  }
-  runtime2.log("Running CronTrigger");
-  return doPOR(runtime2);
-};
-var onLogTrigger = (runtime2, payload) => {
-  runtime2.log("Running LogTrigger");
-  const topics = payload.topics;
-  if (topics.length < 3) {
-    runtime2.log("Log payload does not contain enough topics");
-    throw new Error(`log payload does not contain enough topics ${topics.length}`);
-  }
-  const emitter = bytesToHex(topics[1].slice(12));
-  runtime2.log(`Emitter ${emitter}`);
-  const message = getLastMessage(runtime2, runtime2.config.evms[0], emitter);
-  runtime2.log(`Message retrieved from the contract ${message}`);
-  return message;
-};
-var initWorkflow = (config) => {
-  const cronTrigger = new CronCapability;
-  const network248 = getNetwork({
-    chainFamily: "evm",
-    chainSelectorName: config.evms[0].chainSelectorName,
-    isTestnet: true
+var handleRestore = (runtime2, input) => {
+  const parsed = validateRestoreInput(input);
+  const product = find(runtime2, {
+    collection: "products",
+    filter: { productId: parsed.productId },
+    limit: 1
   });
-  if (!network248) {
-    throw new Error(`Network not found for chain selector name: ${config.evms[0].chainSelectorName}`);
+  if (product.documents.length === 0) {
+    return {
+      ok: false,
+      action: "restore",
+      reasonCode: "PRODUCT_NOT_FOUND",
+      message: "product does not exist"
+    };
   }
-  const evmClient = new ClientCapability(network248.chainSelector.selector);
+  const productStatus = typeof product.documents[0]?.status === "string" ? product.documents[0].status : "ACTIVE";
+  if (productStatus === "BANNED") {
+    return {
+      ok: false,
+      action: "restore",
+      reasonCode: "RESTORE_DENIED_BANNED",
+      message: "restore is denied for banned products"
+    };
+  }
+  const entitlement = find(runtime2, {
+    collection: "entitlements",
+    filter: { buyer: parsed.buyer, productId: parsed.productId },
+    limit: 1
+  });
+  runtime2.log("CHECK: mongodb read ok");
+  if (entitlement.documents.length === 0) {
+    return {
+      ok: false,
+      action: "restore",
+      reasonCode: "NOT_OWNED",
+      message: "buyer does not own this product"
+    };
+  }
+  return {
+    ok: true,
+    action: "restore",
+    reasonCode: "RESTORE_ALLOWED",
+    message: "restore allowed",
+    data: {
+      buyer: parsed.buyer,
+      productId: parsed.productId,
+      status: productStatus
+    }
+  };
+};
+var handleRefund = (runtime2, input) => {
+  const parsed = validateRefundInput(input);
+  const refundEligibility = find(runtime2, {
+    collection: "refund_eligibility",
+    filter: { buyer: parsed.buyer, productId: parsed.productId },
+    limit: 1
+  });
+  runtime2.log("CHECK: mongodb read ok");
+  const eligibleByDuplicate = refundEligibility.documents.length > 0 && Number(refundEligibility.documents[0]?.duplicateAttempts ?? 0) > 0;
+  if (!eligibleByDuplicate) {
+    return {
+      ok: false,
+      action: "refund",
+      reasonCode: "REFUND_REJECTED_NOT_DUPLICATE",
+      message: "refund is allowed only for duplicate purchase of same buyer and product"
+    };
+  }
+  const hasEntitlement = hasEntitlementOnchain(runtime2, parsed.buyer, parsed.productId);
+  if (!hasEntitlement) {
+    return {
+      ok: false,
+      action: "refund",
+      reasonCode: "REFUND_REJECTED_NO_ENTITLEMENT",
+      message: "refund requires an onchain entitlement record"
+    };
+  }
+  return {
+    ok: true,
+    action: "refund",
+    reasonCode: "REFUND_ELIGIBLE_DUPLICATE_PURCHASE",
+    message: "refund request is eligible due to duplicate purchase",
+    data: {
+      buyer: parsed.buyer,
+      productId: parsed.productId,
+      intentId: parsed.intentId,
+      reason: parsed.reason
+    }
+  };
+};
+var handleGovernance = (runtime2, input) => {
+  const parsed = validateGovernanceInput(input);
+  updateOne(runtime2, {
+    collection: "products",
+    filter: { productId: parsed.productId },
+    update: {
+      $set: {
+        status: parsed.status,
+        updatedAt: runtime2.now().toISOString(),
+        governanceActor: parsed.actor
+      }
+    },
+    upsert: false
+  });
+  runtime2.log("CHECK: mongodb write ok");
+  return {
+    ok: true,
+    action: "governance",
+    reasonCode: "GOVERNANCE_UPDATED",
+    message: "product status updated",
+    data: {
+      productId: parsed.productId,
+      status: parsed.status
+    }
+  };
+};
+var handleVerify = (runtime2, input) => {
+  const parsed = validateVerifyInput(input);
+  const normalized = normalizePaymentProof(runtime2, parsed.proof);
+  runtime2.log("CHECK: proof verified");
+  const data = {
+    kind: normalized.kind,
+    fingerprint: normalized.fingerprint
+  };
+  if (normalized.txHash) {
+    data.txHash = normalized.txHash;
+  }
+  if (normalized.chainId) {
+    data.chainId = normalized.chainId;
+  }
+  return {
+    ok: true,
+    action: "verify",
+    reasonCode: "VERIFY_OK",
+    message: "payment proof is valid and normalized",
+    data
+  };
+};
+var handleDecide = (_runtime, input) => {
+  const parsed = validateDecideInput(input);
+  const allow = parsed.allow ?? true;
+  const reasonCode = parsed.reasonCode ?? (allow ? "ALLOW" : "DENY");
+  return {
+    ok: allow,
+    action: "decide",
+    reasonCode,
+    message: allow ? "decision allow" : "decision deny",
+    data: parsed.context
+  };
+};
+var configSchema = exports_external.object({}).passthrough();
+var textDecoder3 = new TextDecoder;
+var parsePayload = (payload) => {
+  if (!payload.input || payload.input.length === 0) {
+    throw new Error("missing HTTP input payload");
+  }
+  const raw = textDecoder3.decode(payload.input);
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    throw new Error("invalid JSON payload");
+  }
+  const input = parsed.input ?? parsed;
+  if (!input || typeof input !== "object") {
+    throw new Error("input object is required");
+  }
+  const action = input.action;
+  if (typeof action !== "string" || action.trim() === "") {
+    throw new Error("input.action is required");
+  }
+  return input;
+};
+var routeAction = (runtime2, input) => {
+  switch (input.action) {
+    case "createListing":
+      return handleCreateListing(runtime2, input);
+    case "list":
+      return handleList(runtime2, input);
+    case "search":
+      return handleSearch(runtime2, input);
+    case "purchase":
+      return handlePurchase(runtime2, input);
+    case "restore":
+      return handleRestore(runtime2, input);
+    case "refund":
+      return handleRefund(runtime2, input);
+    case "governance":
+      return handleGovernance(runtime2, input);
+    case "verify":
+      return handleVerify(runtime2, input);
+    case "decide":
+      return handleDecide(runtime2, input);
+    default:
+      throw new Error(`unsupported action: ${input.action}`);
+  }
+};
+var onHttpTrigger = (runtime2, payload) => {
+  const input = parsePayload(payload);
+  runtime2.log("CHECK: input validated");
+  runtime2.log(`CHECK: action resolved = ${input.action}`);
+  const result = routeAction(runtime2, input);
+  return toJsonSafeValue(result);
+};
+var initWorkflow = () => {
+  const httpTrigger = new HTTPCapability;
   return [
-    handler(cronTrigger.trigger({
-      schedule: config.schedule
-    }), onCronTrigger),
-    handler(evmClient.logTrigger({
-      addresses: [config.evms[0].messageEmitterAddress]
-    }), onLogTrigger)
+    handler(httpTrigger.trigger({
+      authorizedKeys: []
+    }), onHttpTrigger)
   ];
 };
 async function main() {
-  const runner = await Runner.newRunner({
-    configSchema
-  });
+  const runner = await Runner.newRunner({ configSchema });
   await runner.run(initWorkflow);
 }
 main().catch(sendErrorResponse);

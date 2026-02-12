@@ -6,7 +6,7 @@ import {
   type Runtime,
 } from "@chainlink/cre-sdk";
 import { z } from "zod";
-import { optionalSetting, requireSetting } from "../lib/env";
+import { optionalSetting } from "../lib/env";
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
@@ -30,7 +30,6 @@ type MongoAction = "insertOne" | "find" | "updateOne";
 type MongoRequest = {
   collection: string;
   database?: string;
-  dataSource?: string;
 };
 
 type InsertOneInput = MongoRequest & {
@@ -80,9 +79,10 @@ const readJson = (body: Uint8Array | string): unknown => {
 };
 
 const getMongoConfig = (runtime: Runtime<unknown>) => ({
-  baseUrl: stripTrailingSlash(requireSetting(runtime, "MONGODB_DATA_API_URL")),
-  apiKey: requireSetting(runtime, "MONGODB_DATA_API_KEY"),
-  dataSource: requireSetting(runtime, "MONGODB_DATA_SOURCE"),
+  baseUrl: stripTrailingSlash(
+    optionalSetting(runtime, "MONGODB_DB_API_URL", "http://localhost:3000/api/db"),
+  ),
+  apiKey: optionalSetting(runtime, "MONGODB_DB_API_KEY", ""),
   database: optionalSetting(runtime, "MONGODB_DATABASE", "creon_store"),
   maxRetries: Number.parseInt(
     optionalSetting(runtime, "MONGODB_MAX_RETRIES", "3"),
@@ -119,11 +119,11 @@ const executeMongoAction = (
     runtime.log(`CHECK: mongodb call start action=${action} attempt=${attempt}`);
     try {
       const response = sendHttp({
-        url: `${baseUrl}/action/${action}`,
+        url: `${baseUrl}/${action}`,
         method: "POST",
         headers: {
           "content-type": "application/json",
-          "api-key": apiKey,
+          ...(apiKey ? { "x-db-api-key": apiKey } : {}),
         },
         body: toBase64(textEncoder.encode(JSON.stringify(payload))),
       }).result();
@@ -167,7 +167,6 @@ export const insertOne = (
 ): z.infer<typeof insertOneResponseSchema> => {
   const config = getMongoConfig(runtime);
   const response = executeMongoAction(runtime, "insertOne", {
-    dataSource: input.dataSource ?? config.dataSource,
     database: input.database ?? config.database,
     collection: input.collection,
     document: input.document,
@@ -182,7 +181,6 @@ export const find = (
 ): z.infer<typeof findResponseSchema> => {
   const config = getMongoConfig(runtime);
   const response = executeMongoAction(runtime, "find", {
-    dataSource: input.dataSource ?? config.dataSource,
     database: input.database ?? config.database,
     collection: input.collection,
     filter: input.filter ?? {},
@@ -200,7 +198,6 @@ export const updateOne = (
 ): z.infer<typeof updateOneResponseSchema> => {
   const config = getMongoConfig(runtime);
   const response = executeMongoAction(runtime, "updateOne", {
-    dataSource: input.dataSource ?? config.dataSource,
     database: input.database ?? config.database,
     collection: input.collection,
     filter: input.filter,

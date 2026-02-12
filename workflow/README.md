@@ -14,19 +14,19 @@ This workflow is organized around a single HTTP trigger entrypoint that routes b
 - `verify`
 - `decide`
 
-Each route currently returns a wiring response and logs an action checkpoint.
+Routes execute implemented workflow logic and emit `CHECK` checkpoints.
 
 ## Required Settings
-Provide these values in `.env` for local runs (see `.env.example` at repo root
-or `workflow/.env.example`) and/or in workflow secrets:
+Provide these values in root `.env`:
 - `CRE_ETH_PRIVATE_KEY`
-- `MONGODB_DATA_API_URL`
-- `MONGODB_DATA_API_KEY`
-- `MONGODB_DATA_SOURCE`
+- `MONGODB_DB_API_URL` (default `http://localhost:3000/api/db`)
+- `MONGODB_DB_API_KEY` (optional)
 - `MONGODB_DATABASE`
-- `OPENAI_API_KEY`
-- `OPENAI_MODEL`
-- `OPENAI_BASE_URL`
+- `MONGODB_ATLAS_URI` (used by Next.js API route, not directly by workflow)
+- `ENABLE_POLICY_CHECKS` (`false` for DB-only testing)
+- `OPENAI_API_KEY` (required only when `ENABLE_POLICY_CHECKS=true`)
+- `OPENAI_MODEL` (required only when `ENABLE_POLICY_CHECKS=true`)
+- `OPENAI_BASE_URL` (required only when `ENABLE_POLICY_CHECKS=true`)
 - `CHAIN_GAS_LIMIT`
 - `ENTITLEMENT_REGISTRY_ADDRESS`
 - `AGENT_WALLET_ADDRESS`
@@ -34,10 +34,18 @@ or `workflow/.env.example`) and/or in workflow secrets:
 - `COMMERCE_USDC_ADDRESS`
 
 ## Simulate
-From repo root:
+From repo root, start Next.js API first:
 
 ```bash
-cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload '{"input":{"action":"list"}}'
+cd ./creon-store
+bun install
+bun run dev
+```
+
+Then run workflow in another shell:
+
+```bash
+cre workflow simulate ./workflow --env .env --target=staging-settings --non-interactive --trigger-index=0 --http-payload '{"input":{"action":"list"}}'
 ```
 
 Expected log checkpoints include:

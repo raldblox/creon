@@ -17,6 +17,7 @@ import {
   handleSearch,
   handleVerify,
 } from "./process";
+import { toJsonSafeValue } from "./lib/serialize";
 import type { ActionHandlerResult, WorkflowInput } from "./lib/types";
 
 const configSchema = z.object({}).passthrough();
@@ -86,7 +87,8 @@ const onHttpTrigger = (
   const input = parsePayload(payload);
   runtime.log("CHECK: input validated");
   runtime.log(`CHECK: action resolved = ${input.action}`);
-  return routeAction(runtime, input);
+  const result = routeAction(runtime, input);
+  return toJsonSafeValue(result) as ActionHandlerResult;
 };
 
 const initWorkflow = () => {
