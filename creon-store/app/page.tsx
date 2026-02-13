@@ -1,5 +1,5 @@
-import { ComponentExample } from "@/components/component-example";
+import { CreGatewayConsole } from "@/components/cre-gateway-console";
 
 export default function Page() {
-return <ComponentExample />;
+return <CreGatewayConsole />;
 }

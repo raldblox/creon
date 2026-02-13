@@ -5,7 +5,7 @@ Agentic commerce built on Chainlink CRE workflows.
 ## Current Architecture
 - Workflow runs core commerce logic in [`workflow/`](workflow/)
 - OpenAI LLM policy classifier runs inside workflow `createListing` path via [`workflow/integration/openai.ts`](workflow/integration/openai.ts) using system prompt from [`workflow/lib/prompts/listingPolicy.ts`](workflow/lib/prompts/listingPolicy.ts)
-- Public API gateway is served by Next.js via [`creon-store/app/api/cre/[action]/route.ts`](creon-store/app/api/cre/[action]/route.ts)
+- Public API gateway is served by Next.js via [`creon-store/app/api/cre/[action]/route.ts`](creon-store/app/api/cre/[action]/route.ts) for non-purchase actions and [`creon-store/app/api/cre/purchase/route.ts`](creon-store/app/api/cre/purchase/route.ts) for x402 purchase
 - Next.js request guard uses [`creon-store/proxy.ts`](creon-store/proxy.ts) (Next 16 proxy, not middleware)
 - MongoDB access is handled via Next.js route [`creon-store/app/api/db/[action]/route.ts`](creon-store/app/api/db/[action]/route.ts)
 - Next.js route connects to Atlas using `MONGODB_ATLAS_URI`
@@ -51,8 +51,8 @@ Current workflow actions in [`workflow/process/`](workflow/process/):
 - `createListing`: create a product listing, optionally run policy checks, then write to MongoDB.
 - `list`: list products from MongoDB (`ACTIVE` and non-banned by default).
 - `search`: text and tag search over listings.
-- `purchase`: verify payment proof, enforce configured fee (`COMMERCE_FEE_BPS`, default 1%, max 25%), collect gross to agent wallet, record fee/net settlement ledger, queue merchant payout (`settlement_queue`), detect duplicates, write purchase + entitlement, and record onchain entitlement.
-- `settle`: mark queued merchant payouts as settled by `intentId` and attach settlement tx hash.
+- `purchase`: verify payment proof, enforce fee from `COMMERCE_CHECKOUT_ADDRESS` onchain quote when configured (fallback `COMMERCE_FEE_BPS`), collect gross to agent wallet, record fee/net settlement ledger, queue merchant payout (`settlement_queue`), detect duplicates, write purchase + entitlement, and record onchain entitlement.
+- `settle`: execute checkout payout for queued records (when tx hash is not provided), then mark settlement as completed and attach `settlementTxHash`.
 - `restore`: validate ownership and product status before restore.
 - `refund`: allow refunds only for duplicate purchase of same `buyer + productId` with entitlement checks.
 - `governance`: update product lifecycle status (`ACTIVE`, `PAUSED`, `DISCONTINUED`, `BANNED`).
@@ -62,6 +62,9 @@ Current workflow actions in [`workflow/process/`](workflow/process/):
 For x402 transfer-only flows (no calldata params), CREON uses a two-step settlement model:
 - purchase tx sends gross amount to agent wallet (`payTo`)
 - workflow verifies proof and fee, then queues merchant net payout in `settlement_queue`
+- `purchase` returns `paymentTxHash` (buyer payment) and `entitlementTxHash` (registry write)
+- merchant payout tx hash is attached during `settle` as `settlementTxHash`
+- do not pass buyer `paymentTxHash` into `settle`; leaving settlement hash empty triggers checkout payout execution and returns real `settlementTxHash`
 
 ## Required Env
 Copy [`.env.example`](.env.example) to [`.env`](.env) and set:
@@ -72,6 +75,9 @@ Copy [`.env.example`](.env.example) to [`.env`](.env) and set:
 - `MONGODB_DB_API_KEY` (optional)
 - `ENABLE_POLICY_CHECKS` (`false` to skip OpenAI policy checks for listing)
 - `COMMERCE_FEE_BPS` (default `100`, max `2500`)
+- `AGENT_WALLET_PRIVATE_KEY` (server-side signer used by `/api/checkout/settle`)
+- `COMMERCE_CHECKOUT_SETTLE_API_URL` (default `http://localhost:3000/api/checkout/settle`)
+- `COMMERCE_CHECKOUT_SETTLE_API_KEY` (optional shared key between workflow and settle API)
 
 If `ENABLE_POLICY_CHECKS=false`, `createListing` does not require OpenAI keys.
 
@@ -160,6 +166,14 @@ After deploy, copy the printed contract address to workflow config:
 
 Set:
 - `ENTITLEMENT_REGISTRY_ADDRESS=0x...`
+
+Deploy checkout with fixed fee recipient:
+
+```bash
+forge script script/DeployCommerceCheckout.s.sol:DeployCommerceCheckout \
+  --rpc-url base_sepolia \
+  --broadcast
+```
 
 ## Fixture Test Matrix
 Fixtures are sample store scenarios you can feed directly to the workflow.
