@@ -1,7 +1,7 @@
 # CREON Workflow
 
 This workflow is organized around a single HTTP trigger entrypoint that routes by
-`input.action` into `workflow/process/*`.
+`input.action` into [`workflow/process/`](workflow/process/).
 
 ## Implemented Action Routes
 - `createListing`
@@ -28,22 +28,30 @@ Routes execute implemented workflow logic and emit `CHECK` checkpoints.
 - `decide`: returns an allow/deny decision object for orchestration/testing.
 
 ## OpenAI LLM Policy Classifier
-The LLM path is implemented in `workflow/integration/openai.ts` and is called by
-`workflow/process/createListing.ts` only when `ENABLE_POLICY_CHECKS=true`.
-The system prompt is isolated in `workflow/lib/prompts/listingPolicy.ts`.
+The LLM path is implemented in [`workflow/integration/openai.ts`](workflow/integration/openai.ts) and is called by
+[`workflow/process/createListing.ts`](workflow/process/createListing.ts) only when `ENABLE_POLICY_CHECKS=true`.
+The system prompt is isolated in [`workflow/lib/prompts/listingPolicy.ts`](workflow/lib/prompts/listingPolicy.ts).
 Reference pattern: https://smartcontractkit.github.io/cre-bootcamp-2026/day-2/04-ai-integration.html
 
 Classification output:
 - `complianceFlags`
+- `complianceDomains` (`financial_crime`, `sanctions_trade`, `ip_abuse`, `malware_cybercrime`, `deceptive_marketing`, `consumer_protection`)
+- `evidence` (short evidence strings from listing content)
 - `riskTier` (`low`, `medium`, `high`)
 - `recommendedPolicy` (`allow`, `review`, `deny`)
 - `confidence` (0..1)
 
 Behavior:
-- If deterministic checks fail, listing is denied before LLM.
+- Deterministic checks are evaluated for signals/flags, but OpenAI remains the final allow/deny decision maker.
 - If LLM returns `deny`, listing is denied with `reasonCode=POLICY_DENY_LLM`.
 - If allowed/review, listing is stored and `llmPolicy` is saved in MongoDB.
 - `OPENAI_API_KEY` can be loaded from `.env` or workflow secret `OPENAI_API_KEY`.
+
+## Risk And Compliance Commitment
+For digital goods/services commerce, this workflow is designed to produce auditable policy outcomes:
+- Deterministic checks provide stable rule-based signals.
+- LLM classification adds contextual risk/compliance reasoning and evidence.
+- Compliance domains are explicitly labeled to support monitoring, governance review, and incident response.
 
 ## Response Shape
 All actions now return a CREON result envelope with an `acp` section aligned to the Agentic Commerce Protocol.
@@ -92,13 +100,13 @@ bun run dev
 This executes the `list` action and returns current products from MongoDB.
 
 ```bash
-cre workflow simulate ./workflow --env .env --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/list_basic.json"
+cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/list_basic.json"
 ```
 
 If your fixture folder is `creon-workflow/fixtures`, use:
 
 ```bash
-cre workflow simulate ./workflow --env .env --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/creon-workflow/fixtures/list_basic.json"
+cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/creon-workflow/fixtures/list_basic.json"
 ```
 
 Expected log checkpoints include:
@@ -111,37 +119,72 @@ To test LLM classification on listing:
 2. Run:
 
 ```bash
-cre workflow simulate ./workflow --env .env --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_allow_llm.json"
+cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_template_pack_llm.json"
 ```
+
+Note: `--env .env` is optional if your shell/default environment is already configured.
 
 Expected LLM logs:
 - `[OPENAI] analyzing listing policy`
 - `[OPENAI] analysis completed status=200`
 - `[OPENAI] listing policy classification completed`
 
+## Exact Allow And Deny Runs
+Allow listing (template pack for commerce operations):
+
+```bash
+cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_template_pack.json"
+```
+
+Deny listing via illicit keywords (contains terms like "stolen" and "exploit kit"):
+
+```bash
+cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_underground_access_kit.json"
+```
+
+Deny listing via scam pattern (scam phrases + very high price):
+
+```bash
+cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_profit_multiplier_vault.json"
+```
+
+More policy-decision challenges:
+
+```bash
+cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_brand_clone_starter.json"
+cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_malware_loader_bundle.json"
+cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_enterprise_playbook.json"
+cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_roi_signals_membership.json"
+```
+
 ## Fixture Coverage
 Fixtures are practical samples for storefront and payment flows.
-Each file under `workflow/fixtures/` is a ready-to-run payload.
+Each file under [`workflow/fixtures/`](workflow/fixtures/) is a ready-to-run payload.
 
-- `create_listing_allow.json`: happy-path listing create.
-- `create_listing_allow_llm.json`: same listing intended for LLM path when `ENABLE_POLICY_CHECKS=true`.
-- `create_listing_deny_deterministic.json`: deterministic policy deny case.
-- `list_basic.json`: fetch basic listing feed.
-- `search_templates.json`: search by terms/tags.
-- `purchase_success_x402.json`: successful purchase with x402 proof.
-- `purchase_success_tx.json`: successful purchase with tx proof.
-- `purchase_fee_mismatch.json`: amount/fee mismatch rejection.
-- `purchase_duplicate_proof.json`: duplicate proof replay path.
-- `purchase_already_owned.json`: duplicate entitlement path.
-- `restore_owned.json`: restore allowed for owner.
-- `restore_not_owned.json`: restore denied for non-owner.
-- `restore_banned.json`: restore denied for banned product.
-- `restore_product_not_found.json`: restore denied for missing product.
-- `refund_request.json`: refund request evaluation input.
-- `refund_eligible_review.json`: refund-eligible duplicate review path.
-- `governance_pause.json`: mark listing as paused.
-- `governance_ban.json`: mark listing as banned.
-- `verify_tx.json`: proof normalization route.
-- `decide_allow.json`: generic allow decision.
-- `decide_deny.json`: generic deny decision.
-- `INDEX.json`: fixture index reference.
+- [`create_listing_template_pack.json`](workflow/fixtures/create_listing_template_pack.json): template bundle listing.
+- [`create_listing_template_pack_llm.json`](workflow/fixtures/create_listing_template_pack_llm.json): same template listing for explicit LLM-path run.
+- [`create_listing_underground_access_kit.json`](workflow/fixtures/create_listing_underground_access_kit.json): illicit underground-kit scenario.
+- [`create_listing_profit_multiplier_vault.json`](workflow/fixtures/create_listing_profit_multiplier_vault.json): scam-claims and high-price scenario.
+- [`create_listing_brand_clone_starter.json`](workflow/fixtures/create_listing_brand_clone_starter.json): brand impersonation scenario.
+- [`create_listing_malware_loader_bundle.json`](workflow/fixtures/create_listing_malware_loader_bundle.json): malware-style payload scenario.
+- [`create_listing_enterprise_playbook.json`](workflow/fixtures/create_listing_enterprise_playbook.json): low-risk enterprise playbook scenario.
+- [`create_listing_roi_signals_membership.json`](workflow/fixtures/create_listing_roi_signals_membership.json): aggressive ROI-marketing scenario.
+- [`list_basic.json`](workflow/fixtures/list_basic.json): fetch basic listing feed.
+- [`search_templates.json`](workflow/fixtures/search_templates.json): search by terms/tags.
+- [`purchase_success_x402.json`](workflow/fixtures/purchase_success_x402.json): successful purchase with x402 proof.
+- [`purchase_success_tx.json`](workflow/fixtures/purchase_success_tx.json): successful purchase with tx proof.
+- [`purchase_fee_mismatch.json`](workflow/fixtures/purchase_fee_mismatch.json): amount/fee mismatch rejection.
+- [`purchase_duplicate_proof.json`](workflow/fixtures/purchase_duplicate_proof.json): duplicate proof replay path.
+- [`purchase_already_owned.json`](workflow/fixtures/purchase_already_owned.json): duplicate entitlement path.
+- [`restore_owned.json`](workflow/fixtures/restore_owned.json): restore allowed for owner.
+- [`restore_not_owned.json`](workflow/fixtures/restore_not_owned.json): restore denied for non-owner.
+- [`restore_banned.json`](workflow/fixtures/restore_banned.json): restore denied for banned product.
+- [`restore_product_not_found.json`](workflow/fixtures/restore_product_not_found.json): restore denied for missing product.
+- [`refund_request.json`](workflow/fixtures/refund_request.json): refund request evaluation input.
+- [`refund_eligible_review.json`](workflow/fixtures/refund_eligible_review.json): refund-eligible duplicate review path.
+- [`governance_pause.json`](workflow/fixtures/governance_pause.json): mark listing as paused.
+- [`governance_ban.json`](workflow/fixtures/governance_ban.json): mark listing as banned.
+- [`verify_tx.json`](workflow/fixtures/verify_tx.json): proof normalization route.
+- [`decide_allow.json`](workflow/fixtures/decide_allow.json): generic allow decision.
+- [`decide_deny.json`](workflow/fixtures/decide_deny.json): generic deny decision.
+- [`INDEX.json`](workflow/fixtures/INDEX.json): fixture index reference.

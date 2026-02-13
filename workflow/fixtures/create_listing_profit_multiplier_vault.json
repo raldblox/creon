@@ -1,0 +1,24 @@
+{
+  "input": {
+    "action": "createListing",
+    "listing": {
+      "productId": "prod-deny-scam-001",
+      "merchant": "0x1111111111111111111111111111111111111111",
+      "title": "AI Profit Multiplier Vault",
+      "description": "This package gives a 100% guaranteed return and lets you double your money with our risk free return strategy and hidden growth loops.",
+      "category": "download",
+      "delivery": {
+        "type": "download",
+        "format": "zip",
+        "access": "direct",
+        "restoreSupported": true
+      },
+      "pricing": {
+        "currency": "USDC",
+        "chain": "base-sepolia",
+        "amount": "25000"
+      },
+      "tags": ["profit", "growth", "signals"]
+    }
+  }
+}

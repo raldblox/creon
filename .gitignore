@@ -2,4 +2,7 @@
 node_modules/
 .private-docs/
 workflow/dist/
+workflow/tmp.js
+workflow/tmp.wasm
+workflow/.workflow-temp-*.ts
 

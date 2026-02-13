@@ -1,0 +1,28 @@
+{
+  "input": {
+    "action": "createListing",
+    "listing": {
+      "productId": "prod-brand-clone-001",
+      "merchant": "0x1111111111111111111111111111111111111111",
+      "title": "Top Brand Clone Store Starter",
+      "description": "A full package to replicate the look, logo style, and checkout messaging of a popular brand so buyers think they are purchasing from the original store.",
+      "category": "template",
+      "delivery": {
+        "type": "download",
+        "format": "zip",
+        "access": "gated",
+        "restoreSupported": true
+      },
+      "pricing": {
+        "currency": "USDC",
+        "chain": "base-sepolia",
+        "amount": "149"
+      },
+      "tags": ["brand", "clone", "storefront"],
+      "policies": {
+        "refundPolicy": "limited",
+        "maxPurchasesPerBuyer": 2
+      }
+    }
+  }
+}

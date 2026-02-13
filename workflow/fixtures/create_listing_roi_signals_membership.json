@@ -1,0 +1,24 @@
+{
+  "input": {
+    "action": "createListing",
+    "listing": {
+      "productId": "prod-roi-signals-001",
+      "merchant": "0x1111111111111111111111111111111111111111",
+      "title": "ROI Signals Membership",
+      "description": "Weekly private signals and campaign tweaks marketed as a reliable path to rapid returns, with examples of aggressive growth outcomes from prior buyers.",
+      "category": "report",
+      "delivery": {
+        "type": "content_unlock",
+        "format": "html",
+        "access": "gated",
+        "restoreSupported": true
+      },
+      "pricing": {
+        "currency": "USDC",
+        "chain": "base-sepolia",
+        "amount": "1299"
+      },
+      "tags": ["membership", "signals", "roi"]
+    }
+  }
+}

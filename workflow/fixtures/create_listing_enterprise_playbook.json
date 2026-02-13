@@ -1,0 +1,28 @@
+{
+  "input": {
+    "action": "createListing",
+    "listing": {
+      "productId": "prod-enterprise-playbook-001",
+      "merchant": "0x1111111111111111111111111111111111111111",
+      "title": "Enterprise Commerce Playbook",
+      "description": "A practical operations playbook for product launches, support workflows, KPI dashboards, and monthly review rituals for B2B commerce teams.",
+      "category": "report",
+      "delivery": {
+        "type": "download",
+        "format": "pdf",
+        "access": "gated",
+        "restoreSupported": true
+      },
+      "pricing": {
+        "currency": "USDC",
+        "chain": "base-sepolia",
+        "amount": "39"
+      },
+      "tags": ["enterprise", "operations", "playbook"],
+      "policies": {
+        "refundPolicy": "standard",
+        "maxPurchasesPerBuyer": 10
+      }
+    }
+  }
+}

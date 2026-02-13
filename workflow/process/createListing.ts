@@ -24,15 +24,11 @@ export const handleCreateListing: ActionHandler = (runtime, input) => {
   if (enablePolicyChecks) {
     logStep(runtime, "ACTION", "createListing deterministic policy evaluation");
     deterministic = evaluateDeterministicPolicy(parsed.listing);
-    if (!deterministic.allow) {
-      return {
-        ok: false,
-        action: "createListing",
-        reasonCode: deterministic.reasonCode,
-        message: "listing denied by deterministic policy",
-        data: { flags: deterministic.flags },
-      };
-    }
+    logStep(
+      runtime,
+      "ACTION",
+      `deterministic signals allow=${deterministic.allow} flags=${deterministic.flags.join("|") || "none"}`,
+    );
 
     llm = classifyListingPolicy(runtime, {
       title: parsed.listing.title,
@@ -50,7 +46,7 @@ export const handleCreateListing: ActionHandler = (runtime, input) => {
         action: "createListing",
         reasonCode: "POLICY_DENY_LLM",
         message: "listing denied by classifier",
-        data: { llm },
+        data: { llm, deterministic },
       };
     }
 
@@ -58,6 +54,8 @@ export const handleCreateListing: ActionHandler = (runtime, input) => {
       { deterministic },
       {
         complianceFlags: llm.complianceFlags,
+        complianceDomains: llm.complianceDomains,
+        evidence: llm.evidence,
         riskTier: llm.riskTier,
         recommendedPolicy: llm.recommendedPolicy,
         confidence: llm.confidence,
@@ -94,6 +92,10 @@ export const handleCreateListing: ActionHandler = (runtime, input) => {
     riskTier: llm?.riskTier ?? "not_checked",
     policyChecksEnabled: enablePolicyChecks,
   };
+  if (llm) {
+    responseData.complianceDomains = llm.complianceDomains;
+    responseData.evidenceCount = llm.evidence.length;
+  }
   if (typeof writeResult.insertedId === "string") {
     responseData.insertedId = writeResult.insertedId;
   }

@@ -3,22 +3,56 @@
   "notes": [
     "Run from repo root with: cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload @./workflow/fixtures/<file>.json",
     "Some paths are stateful and require setup order (create listing before purchase, purchase before restore/refund active-entitlement branch).",
-    "CreateListing ALLOW also depends on OpenAI classifier response."
+    "When ENABLE_POLICY_CHECKS=true, OpenAI decides final allow/deny for createListing."
   ],
   "scenarios": [
     {
-      "file": "create_listing_allow.json",
+      "file": "create_listing_template_pack.json",
       "action": "createListing",
       "expectedReasonCode": "ALLOW",
       "expectedOk": true,
-      "purpose": "Happy path listing creation."
+      "purpose": "Professional template bundle listing."
     },
     {
-      "file": "create_listing_deny_deterministic.json",
+      "file": "create_listing_template_pack_llm.json",
       "action": "createListing",
-      "expectedReasonCode": "POLICY_DENY_DISALLOWED_GOODS",
+      "expectedReasonCode": "ALLOW",
+      "expectedOk": true,
+      "purpose": "Same template listing used to verify LLM path logging."
+    },
+    {
+      "file": "create_listing_underground_access_kit.json",
+      "action": "createListing",
+      "expectedReasonCode": "POLICY_DENY_LLM",
       "expectedOk": false,
-      "purpose": "Deterministic policy deny path."
+      "purpose": "Illicit kit content; LLM should deny with high risk."
+    },
+    {
+      "file": "create_listing_profit_multiplier_vault.json",
+      "action": "createListing",
+      "expectedReasonCode": "POLICY_DENY_LLM",
+      "expectedOk": false,
+      "purpose": "Scam-style claims and extreme pricing pattern."
+    },
+    {
+      "file": "create_listing_enterprise_playbook.json",
+      "action": "createListing",
+      "purpose": "Low-risk business operations report. Observe LLM outcome."
+    },
+    {
+      "file": "create_listing_brand_clone_starter.json",
+      "action": "createListing",
+      "purpose": "Brand impersonation/copycat scenario. Observe LLM outcome."
+    },
+    {
+      "file": "create_listing_malware_loader_bundle.json",
+      "action": "createListing",
+      "purpose": "Malicious payload distribution scenario. Observe LLM outcome."
+    },
+    {
+      "file": "create_listing_roi_signals_membership.json",
+      "action": "createListing",
+      "purpose": "Aggressive returns marketing scenario. Observe LLM outcome."
     },
     {
       "file": "list_basic.json",
@@ -40,7 +74,7 @@
       "expectedReasonCode": "PURCHASE_SUCCESS",
       "expectedOk": true,
       "purpose": "Purchase success via tx proof.",
-      "requires": ["create_listing_allow.json"]
+      "requires": ["create_listing_template_pack.json"]
     },
     {
       "file": "purchase_fee_mismatch.json",
@@ -55,7 +89,7 @@
       "expectedReasonCode": "PURCHASE_SUCCESS",
       "expectedOk": true,
       "purpose": "Purchase success via x402 proof.",
-      "requires": ["create_listing_allow.json"]
+      "requires": ["create_listing_template_pack.json"]
     },
     {
       "file": "purchase_duplicate_proof.json",
@@ -63,7 +97,7 @@
       "expectedReasonCode": "REFUND_ELIGIBLE_DUPLICATE_PURCHASE",
       "expectedOk": false,
       "purpose": "Reject duplicate proof fingerprint.",
-      "requires": ["create_listing_allow.json", "purchase_success_tx.json"]
+      "requires": ["create_listing_template_pack.json", "purchase_success_tx.json"]
     },
     {
       "file": "purchase_already_owned.json",
@@ -71,7 +105,7 @@
       "expectedReasonCode": "REFUND_ELIGIBLE_DUPLICATE_PURCHASE",
       "expectedOk": false,
       "purpose": "Reject second purchase for already-entitled buyer with new proof.",
-      "requires": ["create_listing_allow.json", "purchase_success_tx.json"]
+      "requires": ["create_listing_template_pack.json", "purchase_success_tx.json"]
     },
     {
       "file": "restore_owned.json",
@@ -79,7 +113,7 @@
       "expectedReasonCode": "RESTORE_ALLOWED",
       "expectedOk": true,
       "purpose": "Restore for owned product.",
-      "requires": ["create_listing_allow.json", "purchase_success_tx.json"]
+      "requires": ["create_listing_template_pack.json", "purchase_success_tx.json"]
     },
     {
       "file": "restore_not_owned.json",
@@ -87,7 +121,7 @@
       "expectedReasonCode": "NOT_OWNED",
       "expectedOk": false,
       "purpose": "Restore denied for non-owner.",
-      "requires": ["create_listing_allow.json"]
+      "requires": ["create_listing_template_pack.json"]
     },
     {
       "file": "restore_product_not_found.json",
@@ -103,7 +137,7 @@
       "expectedOk": false,
       "purpose": "Restore denied for banned product.",
       "requires": [
-        "create_listing_allow.json",
+        "create_listing_template_pack.json",
         "purchase_success_tx.json",
         "governance_ban.json"
       ]
@@ -115,7 +149,7 @@
       "expectedOk": true,
       "purpose": "Refund eligible when duplicate buyer+product purchase exists.",
       "requires": [
-        "create_listing_allow.json",
+        "create_listing_template_pack.json",
         "purchase_success_tx.json",
         "purchase_already_owned.json"
       ]
@@ -126,7 +160,7 @@
       "expectedReasonCode": "REFUND_REJECTED_NOT_DUPLICATE",
       "expectedOk": false,
       "purpose": "Refund denied when duplicate buyer+product purchase does not exist.",
-      "requires": ["create_listing_allow.json"]
+      "requires": ["create_listing_template_pack.json"]
     },
     {
       "file": "governance_pause.json",

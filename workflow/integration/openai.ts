@@ -18,6 +18,19 @@ const textDecoder = new TextDecoder();
 
 const classificationSchema = z.object({
   complianceFlags: z.array(z.string()).default([]),
+  complianceDomains: z
+    .array(
+      z.enum([
+        "financial_crime",
+        "sanctions_trade",
+        "ip_abuse",
+        "malware_cybercrime",
+        "deceptive_marketing",
+        "consumer_protection",
+      ]),
+    )
+    .default([]),
+  evidence: z.array(z.string()).default([]),
   riskTier: z.enum(["low", "medium", "high"]),
   recommendedPolicy: z.enum(["allow", "review", "deny"]),
   confidence: z.number().min(0).max(1),
@@ -47,9 +60,34 @@ const openAiResponseSchema = z.object({
 const strictOutputSchema = {
   type: "object",
   additionalProperties: false,
-  required: ["complianceFlags", "riskTier", "recommendedPolicy", "confidence"],
+  required: [
+    "complianceFlags",
+    "complianceDomains",
+    "evidence",
+    "riskTier",
+    "recommendedPolicy",
+    "confidence",
+  ],
   properties: {
     complianceFlags: {
+      type: "array",
+      items: { type: "string" },
+    },
+    complianceDomains: {
+      type: "array",
+      items: {
+        type: "string",
+        enum: [
+          "financial_crime",
+          "sanctions_trade",
+          "ip_abuse",
+          "malware_cybercrime",
+          "deceptive_marketing",
+          "consumer_protection",
+        ],
+      },
+    },
+    evidence: {
       type: "array",
       items: { type: "string" },
     },
@@ -184,7 +222,7 @@ export const classifyListingPolicy = (
   logStep(
     runtime,
     "OPENAI",
-    `classification result policy=${classification.recommendedPolicy} riskTier=${classification.riskTier} confidence=${classification.confidence} flags=${classification.complianceFlags.join("|") || "none"}`,
+    `classification result policy=${classification.recommendedPolicy} riskTier=${classification.riskTier} confidence=${classification.confidence} domains=${classification.complianceDomains.join("|") || "none"} flags=${classification.complianceFlags.join("|") || "none"} evidenceCount=${classification.evidence.length}`,
   );
 
   return classification;
