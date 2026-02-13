@@ -1,3 +1,4 @@
+import { settleViaCheckout } from "../integration/checkout";
 import { find, updateOne } from "../integration/mongodb";
 import { logStep } from "../lib/log";
 import { validateSettleInput } from "../lib/schema";
@@ -23,8 +24,42 @@ export const handleSettle: ActionHandler = (runtime, input) => {
   }
 
   const item = queued.documents[0] as Record<string, unknown>;
+  const buyer = String(item.buyer ?? "");
+  const productId = String(item.productId ?? "");
   const merchant = String(item.merchant ?? "");
+  const paymentTxHash = String(item.paymentTxHash ?? "");
+  const entitlementTxHash = String(item.entitlementTxHash ?? "");
   const merchantNetAmount = Number(item.merchantNetAmount ?? 0);
+
+  const providedSettlementHash = (parsed.settlementTxHash ?? "").trim();
+  if (
+    providedSettlementHash &&
+    paymentTxHash &&
+    providedSettlementHash.toLowerCase() === paymentTxHash.toLowerCase()
+  ) {
+    return {
+      ok: false,
+      action: "settle",
+      reasonCode: "SETTLEMENT_TX_HASH_INVALID",
+      message: "settlement tx hash cannot equal buyer payment tx hash",
+      data: {
+        intentId: parsed.intentId,
+        paymentTxHash,
+        providedSettlementHash,
+      },
+    };
+  }
+
+  const autoCheckout = providedSettlementHash.length === 0;
+  const settlementTxHash = autoCheckout
+    ? settleViaCheckout(runtime, {
+      intentId: parsed.intentId,
+      productId,
+      merchant,
+      buyer,
+      merchantNetAmount,
+    }).settlementTxHash
+    : providedSettlementHash;
 
   updateOne(runtime, {
     collection: "settlement_queue",
@@ -32,8 +67,8 @@ export const handleSettle: ActionHandler = (runtime, input) => {
     update: {
       $set: {
         status: "SETTLED",
-        settlementTxHash: parsed.settlementTxHash,
-        settledBy: parsed.settledBy ?? "workflow",
+        settlementTxHash,
+        settledBy: parsed.settledBy ?? (autoCheckout ? "workflow-checkout-executor" : "workflow"),
         settledAt: runtime.now().toISOString(),
         updatedAt: runtime.now().toISOString(),
       },
@@ -50,7 +85,7 @@ export const handleSettle: ActionHandler = (runtime, input) => {
         $inc: { netSettledToMerchant: merchantNetAmount },
         $set: {
           lastSettlementIntentId: parsed.intentId,
-          lastSettlementTxHash: parsed.settlementTxHash,
+          lastSettlementTxHash: settlementTxHash,
           updatedAt: runtime.now().toISOString(),
         },
       },
@@ -66,7 +101,9 @@ export const handleSettle: ActionHandler = (runtime, input) => {
     message: "settlement marked as completed",
     data: {
       intentId: parsed.intentId,
-      settlementTxHash: parsed.settlementTxHash,
+      paymentTxHash,
+      entitlementTxHash,
+      settlementTxHash,
       merchant,
       merchantNetAmount,
       status: "SETTLED",

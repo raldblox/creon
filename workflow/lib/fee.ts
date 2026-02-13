@@ -8,34 +8,25 @@ const toAmount = (value: string | number): number => {
 
 const round6 = (value: number): number => Math.round(value * 1_000_000) / 1_000_000;
 
-export const computeFeeAmount = (baseAmount: string | number, feeBps: number): number => {
-  const base = toAmount(baseAmount);
-  return round6((base * feeBps) / 10_000);
+export const computeFeeAmount = (paidAmount: string | number, feeBps: number): number => {
+  const paid = toAmount(paidAmount);
+  return round6((paid * feeBps) / 10_000);
 };
 
-export const computeTotalWithFee = (
-  baseAmount: string | number,
-  feeBps: number,
-): number => {
-  const base = toAmount(baseAmount);
-  return round6(base + computeFeeAmount(base, feeBps));
-};
-
-export const verifyFeeAmount = (
-  baseAmount: string | number,
+export const verifyPaidAmountMatchesListing = (
+  listedAmount: string | number,
   paidAmount: string | number | undefined,
-  feeBps: number,
-): { ok: boolean; expectedTotal: number; paidTotal?: number } => {
-  const expectedTotal = computeTotalWithFee(baseAmount, feeBps);
+): { ok: boolean; expectedPaid: number; paidTotal?: number } => {
+  const expectedPaid = toAmount(listedAmount);
   if (paidAmount === undefined) {
-    return { ok: false, expectedTotal };
+    return { ok: false, expectedPaid };
   }
 
   const paidTotal = toAmount(paidAmount);
-  const delta = Math.abs(paidTotal - expectedTotal);
+  const delta = Math.abs(paidTotal - expectedPaid);
   return {
     ok: delta <= 0.000001,
-    expectedTotal,
+    expectedPaid,
     paidTotal,
   };
 };

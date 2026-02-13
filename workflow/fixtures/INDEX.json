@@ -71,7 +71,7 @@
     {
       "file": "purchase_success_tx.json",
       "action": "purchase",
-      "expectedReasonCode": "PURCHASE_SUCCESS",
+      "expectedReasonCode": "PURCHASE_RECORDED_PENDING_SETTLEMENT",
       "expectedOk": true,
       "purpose": "Purchase success via tx proof.",
       "requires": ["create_listing_template_pack.json"]
@@ -81,12 +81,12 @@
       "action": "purchase",
       "expectedReasonCode": "FEE_MISMATCH",
       "expectedOk": false,
-      "purpose": "Purchase reject when paid total does not include required configured fee."
+      "purpose": "Purchase reject when paid amount does not match listed amount exactly."
     },
     {
       "file": "purchase_success_x402.json",
       "action": "purchase",
-      "expectedReasonCode": "PURCHASE_SUCCESS",
+      "expectedReasonCode": "PURCHASE_RECORDED_PENDING_SETTLEMENT",
       "expectedOk": true,
       "purpose": "Purchase success via x402 proof.",
       "requires": ["create_listing_template_pack.json"]
@@ -109,9 +109,9 @@
     {
       "file": "purchase_duplicate_proof.json",
       "action": "purchase",
-      "expectedReasonCode": "REFUND_ELIGIBLE_DUPLICATE_PURCHASE",
-      "expectedOk": false,
-      "purpose": "Reject duplicate proof fingerprint.",
+      "expectedReasonCode": "PURCHASE_ALREADY_RECORDED",
+      "expectedOk": true,
+      "purpose": "Idempotent replay: same proof fingerprint should not trigger refund flow.",
       "requires": ["create_listing_template_pack.json", "purchase_success_tx.json"]
     },
     {

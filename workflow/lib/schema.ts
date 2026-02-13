@@ -105,7 +105,7 @@ const purchaseInputSchema = z.object({
 const settleInputSchema = z.object({
   action: z.literal("settle"),
   intentId: z.string().min(1),
-  settlementTxHash: z.string().min(1),
+  settlementTxHash: z.string().min(1).optional(),
   settledBy: z.string().optional(),
 });
 

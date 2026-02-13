@@ -1,6 +1,7 @@
 import {
   EVMClient,
   LAST_FINALIZED_BLOCK_NUMBER,
+  LATEST_BLOCK_NUMBER,
   TxStatus,
   bytesToHex,
   encodeCallMsg,
@@ -8,9 +9,9 @@ import {
   hexToBase64,
   type Runtime,
 } from "@chainlink/cre-sdk";
-import { decodeFunctionResult, encodeAbiParameters, encodeFunctionData } from "viem";
+import { decodeFunctionResult, encodeAbiParameters, encodeFunctionData, formatUnits, parseUnits } from "viem";
 import { zeroAddress, type Address, type Hex } from "viem";
-import { EntitlementRegistry } from "../../contracts/abi";
+import { CommerceCheckout, EntitlementRegistry } from "../../contracts/abi";
 import { optionalSetting, requireSetting } from "../lib/env";
 import { logStep } from "../lib/log";
 
@@ -40,6 +41,14 @@ export const getEntitlementRegistryAddress = (
   runtime: Runtime<unknown>,
 ): Address => requireSetting(runtime, "ENTITLEMENT_REGISTRY_ADDRESS") as Address;
 
+export const getCommerceCheckoutAddress = (
+  runtime: Runtime<unknown>,
+): Address | null => {
+  const value = optionalSetting(runtime, "COMMERCE_CHECKOUT_ADDRESS", "").trim();
+  if (!value || value === zeroAddress) return null;
+  return value as Address;
+};
+
 const resolveClient = (params: ChainConfig): EVMClient => {
   const network = getNetwork({
     chainFamily: "evm",
@@ -60,16 +69,33 @@ export const callContractRead = (
 ): Hex => {
   logStep(runtime, "CHAIN", `read start chain=${params.chainSelectorName}`);
   const client = resolveClient(params);
-  const reply = client
-    .callContract(runtime, {
-      call: encodeCallMsg({
-        from: params.from ?? zeroAddress,
-        to: params.to,
-        data: params.data,
-      }),
-      blockNumber: LAST_FINALIZED_BLOCK_NUMBER,
-    })
-    .result();
+  const call = encodeCallMsg({
+    from: params.from ?? zeroAddress,
+    to: params.to,
+    data: params.data,
+  });
+
+  let reply: { data: Uint8Array };
+  try {
+    reply = client
+      .callContract(runtime, {
+        call,
+        blockNumber: LAST_FINALIZED_BLOCK_NUMBER,
+      })
+      .result();
+  } catch (error) {
+    const message = String(error);
+    if (!message.toLowerCase().includes("historical state")) {
+      throw error;
+    }
+    logStep(runtime, "CHAIN", "finalized-state read unavailable; retrying latest block");
+    reply = client
+      .callContract(runtime, {
+        call,
+        blockNumber: LATEST_BLOCK_NUMBER,
+      })
+      .result();
+  }
 
   logStep(runtime, "CHAIN", `read completed chain=${params.chainSelectorName}`);
   return bytesToHex(reply.data) as Hex;
@@ -254,4 +280,72 @@ export const setProductStatusOnchain = (
     receiver: registry,
     callData: reportData,
   });
+};
+
+export const quoteCheckoutSplitFromGross = (
+  runtime: Runtime<unknown>,
+  grossAmountDecimal: string | number,
+): { feeBps: number; grossAmount: number; feeAmount: number; merchantNetAmount: number } | null => {
+  const checkout = getCommerceCheckoutAddress(runtime);
+  if (!checkout) return null;
+
+  const chainSelectorName = getCommerceChainSelectorName(runtime);
+  const decimalsRaw = Number.parseInt(optionalSetting(runtime, "COMMERCE_TOKEN_DECIMALS", "6"), 10);
+  const decimals = Number.isFinite(decimalsRaw) && decimalsRaw >= 0 ? decimalsRaw : 6;
+  const grossUnits = parseUnits(String(grossAmountDecimal), decimals);
+
+  const feeBpsData = encodeFunctionData({
+    abi: CommerceCheckout,
+    functionName: "feeBps",
+    args: [],
+  });
+  const feeBpsRaw = callContractRead(runtime, {
+    chainSelectorName,
+    to: checkout,
+    data: feeBpsData,
+  });
+  const feeBps = Number(
+    decodeFunctionResult({
+      abi: CommerceCheckout,
+      functionName: "feeBps",
+      data: feeBpsRaw,
+    }),
+  );
+
+  const denominator = BigInt(10_000 + feeBps);
+  const baseCandidate = (grossUnits * 10_000n) / denominator;
+  const candidates = [baseCandidate, baseCandidate + 1n];
+
+  for (const baseUnits of candidates) {
+    if (baseUnits <= 0n) continue;
+
+    const quoteData = encodeFunctionData({
+      abi: CommerceCheckout,
+      functionName: "quoteSplit",
+      args: [baseUnits],
+    });
+    const quoteRaw = callContractRead(runtime, {
+      chainSelectorName,
+      to: checkout,
+      data: quoteData,
+    });
+    const [quotedGross, quotedFee, quotedMerchantNet] = decodeFunctionResult({
+      abi: CommerceCheckout,
+      functionName: "quoteSplit",
+      data: quoteRaw,
+    }) as [bigint, bigint, bigint];
+
+    if (quotedGross !== grossUnits) continue;
+
+    return {
+      feeBps,
+      grossAmount: Number(formatUnits(quotedGross, decimals)),
+      feeAmount: Number(formatUnits(quotedFee, decimals)),
+      merchantNetAmount: Number(formatUnits(quotedMerchantNet, decimals)),
+    };
+  }
+
+  throw new Error(
+    `checkout quote mismatch for gross amount ${grossAmountDecimal}; ensure listing price matches checkout quote rules`,
+  );
 };

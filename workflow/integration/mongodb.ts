@@ -26,7 +26,7 @@ const updateOneResponseSchema = z.object({
   upsertedId: z.unknown().optional(),
 });
 
-type MongoAction = "insertOne" | "find" | "updateOne";
+type MongoAction = "insertOne" | "find" | "updateOne" | "purchaseCommit";
 
 type MongoRequest = {
   collection: string;
@@ -48,6 +48,23 @@ type UpdateOneInput = MongoRequest & {
   filter: Record<string, unknown>;
   update: Record<string, unknown>;
   upsert?: boolean;
+};
+
+type PurchaseCommitInput = {
+  buyer: string;
+  merchant: string;
+  productId: string;
+  intentId: string;
+  fingerprint: string;
+  proofKind: string;
+  paymentTxHash: string;
+  entitlementTxHash: string;
+  agentWallet: string;
+  grossAmount: number;
+  feeAmount: number;
+  merchantNetAmount: number;
+  feeBps: number;
+  nowIso: string;
 };
 
 const retryableStatusCodes = new Set([408, 425, 429, 500, 502, 503, 504]);
@@ -258,4 +275,16 @@ export const updateOne = (
   });
 
   return updateOneResponseSchema.parse(response);
+};
+
+export const purchaseCommit = (
+  runtime: Runtime<unknown>,
+  input: PurchaseCommitInput,
+): Record<string, unknown> => {
+  const config = getMongoConfig(runtime);
+  const response = executeMongoAction(runtime, "purchaseCommit", {
+    database: config.database,
+    ...input,
+  });
+  return z.record(z.unknown()).parse(response);
 };
