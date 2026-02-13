@@ -1,4 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## CREON Store Gateway
+
+This Next.js 16 app is the public gateway for CREON workflow access.
+
+## Public Endpoints
+- `POST /api/cre/createListing`
+- `POST /api/cre/list`
+- `POST /api/cre/search`
+- `POST /api/cre/purchase` (x402-gated)
+- `POST /api/cre/settle`
+- `POST /api/cre/restore`
+- `POST /api/cre/refund`
+- `POST /api/cre/governance`
+- `POST /api/cre/verify`
+- `POST /api/cre/decide`
+
+Behavior:
+- Gateway forwards each request to `CRE_WORKFLOW_URL`.
+- Gateway injects `input.action` from `[action]` route param.
+- `proxy.ts` enforces x402 payment header for `POST /api/cre/purchase`.
+- Optional strict verification can be enabled with `X402_VERIFY_URL`.
+
+## Required Env
+- `CRE_WORKFLOW_URL` (public/private CRE workflow endpoint)
+- `CRE_WORKFLOW_API_KEY` (optional bearer token for workflow endpoint)
+- `X402_VERIFY_URL` (optional verifier endpoint; if set, purchase requests must validate)
+
+## Existing DB Bridge
+- `POST /api/db/insertOne`
+- `POST /api/db/find`
+- `POST /api/db/updateOne`
+
+These routes are used by workflow-side Mongo integration.
 
 ## Getting Started
 

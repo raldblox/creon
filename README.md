@@ -5,6 +5,8 @@ Agentic commerce built on Chainlink CRE workflows.
 ## Current Architecture
 - Workflow runs core commerce logic in [`workflow/`](workflow/)
 - OpenAI LLM policy classifier runs inside workflow `createListing` path via [`workflow/integration/openai.ts`](workflow/integration/openai.ts) using system prompt from [`workflow/lib/prompts/listingPolicy.ts`](workflow/lib/prompts/listingPolicy.ts)
+- Public API gateway is served by Next.js via [`creon-store/app/api/cre/[action]/route.ts`](creon-store/app/api/cre/[action]/route.ts)
+- Next.js request guard uses [`creon-store/proxy.ts`](creon-store/proxy.ts) (Next 16 proxy, not middleware)
 - MongoDB access is handled via Next.js route [`creon-store/app/api/db/[action]/route.ts`](creon-store/app/api/db/[action]/route.ts)
 - Next.js route connects to Atlas using `MONGODB_ATLAS_URI`
 - Workflow calls the route through `MONGODB_DB_API_URL`
@@ -13,30 +15,35 @@ Agentic commerce built on Chainlink CRE workflows.
 
 ```mermaid
 flowchart TD
-  A[Agent Client / HTTP Trigger] --> B[CREON CRE Workflow]
-  B --> C{Action Router}
+  A[Client / Agent] --> B[CREON Store Gateway]
+  B --> C[/api/cre/listing actions/]
+  B --> D[/api/cre/purchase x402 gated/]
+  C --> E[CRE Workflow Endpoint]
+  D --> E
+  E --> F[CREON CRE Workflow]
+  F --> G{Action Router}
 
-  C --> D[createListing]
-  C --> E[list/search]
-  C --> F[purchase/restore/refund]
-  C --> G[governance/verify/decide]
+  G --> H[createListing]
+  G --> I[list/search]
+  G --> J[purchase/settle/restore/refund]
+  G --> K[governance/verify/decide]
 
-  D --> H[Deterministic Policy Checks]
-  H --> I[OpenAI LLM Policy Classifier]
-  I --> J{Allow or Deny}
-  J -->|Allow/Review| K[DB API endpoint]
-  J -->|Deny| L[Return POLICY_DENY_LLM]
+  H --> L[Deterministic Policy Checks]
+  L --> M[OpenAI LLM Policy Classifier]
+  M --> N{Allow or Deny}
+  N -->|Allow/Review| O[DB API endpoint]
+  N -->|Deny| P[Return POLICY_DENY_LLM]
 
-  E --> K
-  F --> K
-  G --> K
+  I --> O
+  J --> O
+  K --> O
 
-  K --> M[(MongoDB Atlas)]
-  F --> N[(EntitlementRegistry on Base Sepolia)]
+  O --> Q[(MongoDB Atlas)]
+  J --> R[(EntitlementRegistry on Base Sepolia)]
 
-  M --> O[ACP-formatted Response]
-  N --> O
-  L --> O
+  Q --> S[ACP-formatted Response]
+  R --> S
+  P --> S
 ```
 
 ## Workflow Coverage
