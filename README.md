@@ -2,7 +2,7 @@
 
 CREON is an agentic commerce system built on **Chainlink Runtime Environment (CRE)** workflows, with **x402-gated purchases**, **AI policy decisions for listings**, and **onchain entitlement + settlement execution**.
 
-## Judge Quick Scan
+## Quick Overview
 - **CRE is core, not optional**: the main business logic lives in [`workflow/main.ts`](workflow/main.ts) and routes into [`workflow/process/`](workflow/process/).
 - **AI is in-the-loop**: listing risk/compliance decisions call OpenAI via [`workflow/integration/openai.ts`](workflow/integration/openai.ts) with system prompt in [`workflow/lib/prompts/listingPolicy.ts`](workflow/lib/prompts/listingPolicy.ts).
 - **x402 gates paid access**: protected purchase endpoint is served through [`creon-store/proxy.ts`](creon-store/proxy.ts) and [`creon-store/app/api/cre/purchase/route.ts`](creon-store/app/api/cre/purchase/route.ts).
@@ -10,12 +10,16 @@ CREON is an agentic commerce system built on **Chainlink Runtime Environment (CR
 - **Agentic Commerce Protocol response envelope**: workflow responses include an `acp` object (Agentic Commerce Protocol format).
 
 ## What CREON Does
-- Creates listings with deterministic checks plus AI-based policy classification.
-- Stores and searches listings in the database.
-- Verifies x402 purchase proof and records purchase intent.
-- Grants entitlement onchain.
-- Settles merchant payout through checkout split (platform fee + merchant net).
-- Supports restore, refund review path, governance status updates, and verification routes.
+- **AI Listing Risk Classifier**: Runs deterministic checks plus OpenAI policy classification for allow/review/deny decisions.
+- **x402-Gated Purchase Gateway**: Protects paid purchase endpoints and validates payment proof before workflow execution.
+- **Onchain Entitlement Per Purchase**: Writes entitlement for every successful purchase so buyers can restore access later.
+- **Auto-Settlement To Merchant**: Executes checkout-based split payout with platform fee and merchant net release.
+- **Restore Access Flow**: Verifies ownership and product status to restore previously purchased digital access.
+- **Refund Review Guardrails**: Flags refund eligibility based on duplicate purchase and entitlement state.
+- **Governance Controls**: Supports lifecycle controls (`ACTIVE`, `PAUSED`, `DISCONTINUED`, `BANNED`) for listings.
+- **Searchable Product Index**: Stores listings in database and supports list/search retrieval paths for storefront UX.
+- **Agent + Human Interface**: Exposes workflow payload flows through API routes and the gateway console UI.
+- **Verifiable Execution Trail**: Returns structured hashes and statuses (`paymentTxHash`, `entitlementTxHash`, `settlementTxHash`).
 
 ## Architecture
 ```mermaid
