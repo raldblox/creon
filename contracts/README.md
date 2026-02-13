@@ -62,3 +62,17 @@ Required env:
 - `CRE_ETH_PRIVATE_KEY`
 - `COMMERCE_USDC_ADDRESS`
 - `COMMERCE_FEE_BPS` (default `100`, max `2500`)
+- `FEE_RECIPIENT` (recommended: `0x001047dd630b4d985Dd0d13dFeac95C1536966F8`)
+
+Example:
+
+```bash
+export CRE_ETH_PRIVATE_KEY=0xYOUR_PRIVATE_KEY
+export COMMERCE_USDC_ADDRESS=0x036CbD53842c5426634e7929541eC2318f3dCF7e
+export COMMERCE_FEE_BPS=100
+export FEE_RECIPIENT=0x001047dd630b4d985Dd0d13dFeac95C1536966F8
+
+forge script script/DeployCommerceCheckout.s.sol:DeployCommerceCheckout \
+  --rpc-url base_sepolia \
+  --broadcast
+```
