@@ -65,6 +65,7 @@ type HttpTextResponse = {
 
 const stripTrailingSlash = (value: string): string => value.replace(/\/+$/, "");
 const toBase64 = (input: Uint8Array): string => Buffer.from(input).toString("base64");
+const dataApiActionPattern = /\/action\/(insertOne|find|updateOne)$/;
 
 const readJson = (body: Uint8Array | string): unknown => {
   const raw = typeof body === "string" ? body : textDecoder.decode(body);
@@ -80,6 +81,9 @@ const readJson = (body: Uint8Array | string): unknown => {
 };
 
 const getMongoConfig = (runtime: Runtime<unknown>) => ({
+  dataApiUrl: stripTrailingSlash(optionalSetting(runtime, "MONGODB_DATA_API_URL", "")),
+  dataApiKey: optionalSetting(runtime, "MONGODB_DATA_API_KEY", ""),
+  dataSource: optionalSetting(runtime, "MONGODB_DATA_SOURCE", ""),
   baseUrl: stripTrailingSlash(
     optionalSetting(runtime, "MONGODB_DB_API_URL", "http://localhost:3000/api/db"),
   ),
@@ -91,12 +95,48 @@ const getMongoConfig = (runtime: Runtime<unknown>) => ({
   ),
 });
 
+const buildDataApiActionUrl = (baseOrActionUrl: string, action: MongoAction): string => {
+  if (dataApiActionPattern.test(baseOrActionUrl)) {
+    return baseOrActionUrl.replace(dataApiActionPattern, `/action/${action}`);
+  }
+  if (baseOrActionUrl.endsWith("/action")) {
+    return `${baseOrActionUrl}/${action}`;
+  }
+  return `${baseOrActionUrl}/action/${action}`;
+};
+
 const executeMongoAction = (
   runtime: Runtime<unknown>,
   action: MongoAction,
   payload: Record<string, unknown>,
 ): unknown => {
-  const { baseUrl, apiKey, maxRetries } = getMongoConfig(runtime);
+  const { baseUrl, apiKey, dataApiUrl, dataApiKey, dataSource, maxRetries } =
+    getMongoConfig(runtime);
+  const useAtlasDataApi = dataApiUrl.length > 0;
+  if (useAtlasDataApi && !dataApiKey) {
+    throw new Error(
+      "missing required setting \"MONGODB_DATA_API_KEY\" for Atlas Data API mode",
+    );
+  }
+  if (useAtlasDataApi && !dataSource) {
+    throw new Error(
+      "missing required setting \"MONGODB_DATA_SOURCE\" for Atlas Data API mode",
+    );
+  }
+
+  const url = useAtlasDataApi
+    ? buildDataApiActionUrl(dataApiUrl, action)
+    : `${baseUrl}/${action}`;
+  const bodyPayload = useAtlasDataApi ? { dataSource, ...payload } : payload;
+  const headers: Record<string, string> = {
+    "content-type": "application/json",
+    ...(useAtlasDataApi
+      ? { "api-key": dataApiKey }
+      : apiKey
+        ? { "x-db-api-key": apiKey }
+        : {}),
+  };
+
   const httpClient = new HTTPClient();
   const retries = Number.isFinite(maxRetries) && maxRetries > 0 ? maxRetries : 3;
   const sendHttp = httpClient.sendRequest<[HttpJsonRequest], HttpTextResponse>(
@@ -117,16 +157,17 @@ const executeMongoAction = (
   let lastError: unknown;
 
   for (let attempt = 1; attempt <= retries; attempt += 1) {
-    logStep(runtime, "MONGODB", `call start action=${action} attempt=${attempt}`);
+    logStep(
+      runtime,
+      "MONGODB",
+      `call start action=${action} mode=${useAtlasDataApi ? "atlas-data-api" : "db-api-bridge"} attempt=${attempt}`,
+    );
     try {
       const response = sendHttp({
-        url: `${baseUrl}/${action}`,
+        url,
         method: "POST",
-        headers: {
-          "content-type": "application/json",
-          ...(apiKey ? { "x-db-api-key": apiKey } : {}),
-        },
-        body: toBase64(textEncoder.encode(JSON.stringify(payload))),
+        headers,
+        body: toBase64(textEncoder.encode(JSON.stringify(bodyPayload))),
       }).result();
 
       logStep(

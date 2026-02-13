@@ -76,6 +76,9 @@ Provide these values in root `.env`:
 - `MONGODB_DB_API_KEY` (optional)
 - `MONGODB_DATABASE`
 - `MONGODB_ATLAS_URI` (used by Next.js API route, not directly by workflow)
+- `MONGODB_DATA_API_URL` (optional: when set, workflow uses Atlas Data API directly)
+- `MONGODB_DATA_API_KEY` (required with `MONGODB_DATA_API_URL`)
+- `MONGODB_DATA_SOURCE` (required with `MONGODB_DATA_API_URL`, Atlas cluster/data source name)
 - `ENABLE_POLICY_CHECKS` (`false` for DB-only testing)
 - `OPENAI_API_KEY` (required only when `ENABLE_POLICY_CHECKS=true`)
 - `OPENAI_MODEL` (required only when `ENABLE_POLICY_CHECKS=true`)
@@ -126,6 +129,10 @@ cre workflow simulate ./workflow --target=staging-settings --non-interactive --t
 ```
 
 Note: `--env .env` is optional if your shell/default environment is already configured.
+
+Mongo transport mode:
+- Default: DB API bridge (`MONGODB_DB_API_URL`) for local/dev.
+- Atlas direct: set `MONGODB_DATA_API_URL` to call Atlas Data API (`insertOne/find/updateOne`) from workflow.
 
 Expected LLM logs:
 - `[OPENAI] analyzing listing policy`

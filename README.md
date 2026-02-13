@@ -8,6 +8,7 @@ Agentic commerce built on Chainlink CRE workflows.
 - MongoDB access is handled via Next.js route [`creon-store/app/api/db/[action]/route.ts`](creon-store/app/api/db/[action]/route.ts)
 - Next.js route connects to Atlas using `MONGODB_ATLAS_URI`
 - Workflow calls the route through `MONGODB_DB_API_URL`
+- Workflow can also call MongoDB Atlas Data API directly via `MONGODB_DATA_API_URL` (with `MONGODB_DATA_API_KEY` and `MONGODB_DATA_SOURCE`)
 - Workflow responses include an `acp` envelope aligned with the Agentic Commerce Protocol (a standard response format for agent-driven checkout and commerce flows): https://agentic-commerce-protocol.com/
 
 ```mermaid
