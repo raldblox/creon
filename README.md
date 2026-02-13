@@ -110,6 +110,42 @@ cre workflow simulate ./workflow --target=staging-settings --non-interactive --t
 For `create_listing_template_pack.json`, generated `productId` is deterministic:
 - `SKU_11111111_TEMPLATE_PREMIUMG_A00F3B7E`
 
+## Onchain Contract
+`EntitlementRegistry` source and deploy script are in:
+- [`contracts/src/EntitlementRegistry.sol`](contracts/src/EntitlementRegistry.sol)
+- [`contracts/script/DeployEntitlementRegistry.s.sol`](contracts/script/DeployEntitlementRegistry.s.sol)
+- [`contracts/README.md`](contracts/README.md)
+
+### Deploy On Base Sepolia
+From repo root:
+
+```bash
+cd contracts
+forge install foundry-rs/forge-std
+```
+
+Set required env vars:
+
+```bash
+export CRE_ETH_PRIVATE_KEY=0xYOUR_PRIVATE_KEY
+export CRE_FORWARDER_ADDRESS=0xYOUR_FORWARDER_ADDRESS
+```
+
+Deploy:
+
+```bash
+forge script script/DeployEntitlementRegistry.s.sol:DeployEntitlementRegistry \
+  --rpc-url base_sepolia \
+  --broadcast
+```
+
+After deploy, copy the printed contract address to workflow config:
+- `workflow/config.staging.json`
+- `workflow/config.production.json`
+
+Set:
+- `ENTITLEMENT_REGISTRY_ADDRESS=0x...`
+
 ## Fixture Test Matrix
 Fixtures are sample store scenarios you can feed directly to the workflow.
 Use this command pattern for any fixture:

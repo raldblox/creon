@@ -8,7 +8,7 @@ import {
   hexToBase64,
   type Runtime,
 } from "@chainlink/cre-sdk";
-import { decodeFunctionResult, encodeFunctionData } from "viem";
+import { decodeFunctionResult, encodeAbiParameters, encodeFunctionData } from "viem";
 import { zeroAddress, type Address, type Hex } from "viem";
 import { EntitlementRegistry } from "../../contracts/abi";
 import { optionalSetting, requireSetting } from "../lib/env";
@@ -151,15 +151,107 @@ export const recordEntitlementOnchain = (
   const chainSelectorName = getCommerceChainSelectorName(runtime);
   const registry = getEntitlementRegistryAddress(runtime);
 
-  const data = encodeFunctionData({
-    abi: EntitlementRegistry,
-    functionName: "recordEntitlement",
-    args: [buyer, productId],
-  });
+  const reportData = encodeAbiParameters(
+    [
+      { type: "uint8" },
+      { type: "address" },
+      { type: "string" },
+      { type: "uint8" },
+    ],
+    [0, buyer, productId, 0],
+  );
 
   return writeContractReport(runtime, {
     chainSelectorName,
     receiver: registry,
-    callData: data,
+    callData: reportData,
+  });
+};
+
+export type OnchainProductStatus = "ACTIVE" | "PAUSED" | "DISCONTINUED" | "BANNED";
+
+const statusToCode = (status: OnchainProductStatus): number => {
+  switch (status) {
+    case "ACTIVE":
+      return 0;
+    case "PAUSED":
+      return 1;
+    case "DISCONTINUED":
+      return 2;
+    case "BANNED":
+      return 3;
+    default: {
+      const _exhaustive: never = status;
+      return _exhaustive;
+    }
+  }
+};
+
+const codeToStatus = (code: number): OnchainProductStatus => {
+  switch (code) {
+    case 0:
+      return "ACTIVE";
+    case 1:
+      return "PAUSED";
+    case 2:
+      return "DISCONTINUED";
+    case 3:
+      return "BANNED";
+    default:
+      throw new Error(`unknown onchain product status code: ${code}`);
+  }
+};
+
+export const getProductStatusOnchain = (
+  runtime: Runtime<unknown>,
+  productId: string,
+): OnchainProductStatus => {
+  const chainSelectorName = getCommerceChainSelectorName(runtime);
+  const registry = getEntitlementRegistryAddress(runtime);
+
+  const data = encodeFunctionData({
+    abi: EntitlementRegistry,
+    functionName: "getStatus",
+    args: [productId],
+  });
+
+  const raw = callContractRead(runtime, {
+    chainSelectorName,
+    to: registry,
+    data,
+  });
+
+  const statusCode = Number(
+    decodeFunctionResult({
+      abi: EntitlementRegistry,
+      functionName: "getStatus",
+      data: raw,
+    }),
+  );
+
+  return codeToStatus(statusCode);
+};
+
+export const setProductStatusOnchain = (
+  runtime: Runtime<unknown>,
+  productId: string,
+  status: OnchainProductStatus,
+): { txHash: Hex } => {
+  const chainSelectorName = getCommerceChainSelectorName(runtime);
+  const registry = getEntitlementRegistryAddress(runtime);
+  const reportData = encodeAbiParameters(
+    [
+      { type: "uint8" },
+      { type: "address" },
+      { type: "string" },
+      { type: "uint8" },
+    ],
+    [1, zeroAddress, productId, statusToCode(status)],
+  );
+
+  return writeContractReport(runtime, {
+    chainSelectorName,
+    receiver: registry,
+    callData: reportData,
   });
 };
