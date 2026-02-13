@@ -23,7 +23,7 @@ const policiesSchema = z
   .optional();
 
 const listingSchema = z.object({
-  productId: z.string().min(1),
+  productId: z.string().min(1).optional(),
   merchant: z.string().startsWith("0x"),
   title: z.string().min(3),
   description: z.string().min(20),

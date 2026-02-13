@@ -4,11 +4,26 @@ import { buildPolicyArtifact } from "../lib/artifacts";
 import { optionalSetting } from "../lib/env";
 import { logStep } from "../lib/log";
 import { evaluateDeterministicPolicy } from "../lib/policy";
+import { generateSkuProductId } from "../lib/productId";
 import { validateCreateListingInput } from "../lib/schema";
 import type { ActionHandler } from "../lib/types";
 
 export const handleCreateListing: ActionHandler = (runtime, input) => {
   const parsed = validateCreateListingInput(input);
+  const clientProvidedProductId = parsed.listing.productId;
+  const productId = generateSkuProductId({
+    merchant: parsed.listing.merchant,
+    title: parsed.listing.title,
+    category: parsed.listing.category,
+  });
+  logStep(runtime, "ACTION", `generated productId=${productId}`);
+  if (clientProvidedProductId) {
+    logStep(
+      runtime,
+      "ACTION",
+      `ignored client productId=${clientProvidedProductId}; workflow-generated id is authoritative`,
+    );
+  }
   const enablePolicyChecksSetting = optionalSetting(
     runtime,
     "ENABLE_POLICY_CHECKS",
@@ -67,6 +82,7 @@ export const handleCreateListing: ActionHandler = (runtime, input) => {
 
   const listingDocument: Record<string, unknown> = {
     ...parsed.listing,
+    productId,
     status: "ACTIVE",
     createdAt: runtime.now().toISOString(),
     updatedAt: runtime.now().toISOString(),
@@ -80,6 +96,9 @@ export const handleCreateListing: ActionHandler = (runtime, input) => {
   if (artifacts) {
     listingDocument.artifacts = artifacts;
   }
+  if (clientProvidedProductId) {
+    listingDocument.clientProvidedProductId = clientProvidedProductId;
+  }
 
   const writeResult = insertOne(runtime, {
     collection: "products",
@@ -88,13 +107,16 @@ export const handleCreateListing: ActionHandler = (runtime, input) => {
   logStep(runtime, "MONGODB", "listing inserted into products");
 
   const responseData: Record<string, unknown> = {
-    productId: parsed.listing.productId,
+    productId,
     riskTier: llm?.riskTier ?? "not_checked",
     policyChecksEnabled: enablePolicyChecks,
   };
   if (llm) {
     responseData.complianceDomains = llm.complianceDomains;
     responseData.evidenceCount = llm.evidence.length;
+  }
+  if (clientProvidedProductId) {
+    responseData.clientProvidedProductId = clientProvidedProductId;
   }
   if (typeof writeResult.insertedId === "string") {
     responseData.insertedId = writeResult.insertedId;

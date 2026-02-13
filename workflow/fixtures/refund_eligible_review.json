@@ -3,7 +3,7 @@
     "action": "refund",
     "intentId": "intent-refund-review-001",
     "buyer": "0x4444444444444444444444444444444444444444",
-    "productId": "prod-template-001",
+    "productId": "SKU_11111111_TEMPLATE_PREMIUMG_A00F3B7E",
     "reason": "accidental_purchase"
   }
 }

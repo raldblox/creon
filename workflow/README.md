@@ -17,7 +17,7 @@ This workflow is organized around a single HTTP trigger entrypoint that routes b
 Routes execute implemented workflow logic and emit `CHECK` checkpoints.
 
 ## Action Behavior
-- `createListing`: validates listing payload, optionally runs deterministic + LLM policy checks, then stores product document in `products`.
+- `createListing`: validates listing payload, generates authoritative `productId` as `SKU_...`, optionally runs deterministic + LLM policy checks, then stores product document in `products`.
 - `list`: reads from `products`, excluding banned listings unless `includeInactive=true`.
 - `search`: performs regex-based title/description search plus tag filtering on `products`.
 - `purchase`: validates chain/currency defaults, validates proof + fee, rejects duplicates, records purchase, updates entitlement, and writes onchain entitlement.
@@ -102,6 +102,9 @@ This executes the `list` action and returns current products from MongoDB.
 ```bash
 cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/list_basic.json"
 ```
+
+Deterministic SKU example for [`create_listing_template_pack.json`](workflow/fixtures/create_listing_template_pack.json):
+- `SKU_11111111_TEMPLATE_PREMIUMG_A00F3B7E`
 
 If your fixture folder is `creon-workflow/fixtures`, use:
 

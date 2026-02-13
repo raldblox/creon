@@ -79,6 +79,8 @@ CREON treats digital goods/services listing safety as a first-class workflow res
 - The classifier tags compliance domains (financial crime, sanctions/trade, IP abuse, malware/cybercrime, deceptive marketing, consumer protection).
 - The classifier also returns short evidence strings to explain why a listing was allowed, sent to review, or denied.
 - Denials return explicit machine-readable reason codes such as `POLICY_DENY_LLM` for downstream governance/audit flows.
+- Workflow always generates the authoritative `productId` in `SKU_...` format before write.
+- If a client sends `listing.productId`, it is ignored and returned as `clientProvidedProductId` for audit/debug only.
 
 Required env for LLM path:
 - `ENABLE_POLICY_CHECKS=true`
@@ -103,6 +105,9 @@ This sends a `createListing` input that inserts a product into the `products` co
 ```bash
 cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_template_pack.json"
 ```
+
+For `create_listing_template_pack.json`, generated `productId` is deterministic:
+- `SKU_11111111_TEMPLATE_PREMIUMG_A00F3B7E`
 
 ## Fixture Test Matrix
 Fixtures are sample store scenarios you can feed directly to the workflow.

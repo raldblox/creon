@@ -2,7 +2,6 @@
   "input": {
     "action": "createListing",
     "listing": {
-      "productId": "prod-template-001",
       "merchant": "0x1111111111111111111111111111111111111111",
       "title": "Premium Growth Template Pack",
       "description": "A production-ready template bundle for agentic commerce teams, including SOPs, KPI dashboards, and implementation checklists.",

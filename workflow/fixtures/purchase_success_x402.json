@@ -4,7 +4,7 @@
     "intentId": "intent-purchase-x402-001",
     "buyer": "0x3333333333333333333333333333333333333333",
     "merchant": "0x1111111111111111111111111111111111111111",
-    "productId": "prod-template-001",
+    "productId": "SKU_11111111_TEMPLATE_PREMIUMG_A00F3B7E",
     "pricing": {
       "currency": "USDC",
       "chain": "base-sepolia",
