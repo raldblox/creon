@@ -8,6 +8,7 @@ This workflow is organized around a single HTTP trigger entrypoint that routes b
 - `list`
 - `search`
 - `purchase`
+- `settle`
 - `restore`
 - `refund`
 - `governance`
@@ -20,7 +21,8 @@ Routes execute implemented workflow logic and emit `CHECK` checkpoints.
 - `createListing`: validates listing payload, generates authoritative `productId` as `SKU_...`, optionally runs deterministic + LLM policy checks, then stores product document in `products`.
 - `list`: reads from `products`, excluding banned listings unless `includeInactive=true`.
 - `search`: performs regex-based title/description search plus tag filtering on `products`.
-- `purchase`: validates chain/currency defaults, validates proof + fee, rejects duplicates, records purchase, updates entitlement, and writes onchain entitlement.
+- `purchase`: validates chain/currency defaults, enforces configured fee via `COMMERCE_FEE_BPS` (default `100`, max `2500`), validates proof + fee, records gross/fee/net settlement ledger, queues merchant payout (`settlement_queue` as `PENDING`), rejects duplicates, updates entitlement, and writes onchain entitlement.
+- `settle`: marks queued merchant payout records as `SETTLED` using `intentId` and attaches settlement tx hash.
 - `restore`: checks product existence/status and buyer entitlement before allowing restore.
 - `refund`: checks duplicate-purchase eligibility (`refund_eligibility`) and onchain entitlement before allowing refund.
 - `governance`: updates product status and governance actor metadata.
@@ -88,6 +90,7 @@ Provide these values in root `.env`:
 - `AGENT_WALLET_ADDRESS`
 - `COMMERCE_CHAIN_SELECTOR_NAME` (default: `ethereum-testnet-sepolia-base-1`)
 - `COMMERCE_USDC_ADDRESS`
+- `COMMERCE_FEE_BPS` (default `100`, max `2500`)
 
 ## Simulate
 1. Start Next.js DB API first.
@@ -184,6 +187,8 @@ Each file under [`workflow/fixtures/`](workflow/fixtures/) is a ready-to-run pay
 - [`purchase_success_x402.json`](workflow/fixtures/purchase_success_x402.json): successful purchase with x402 proof.
 - [`purchase_success_tx.json`](workflow/fixtures/purchase_success_tx.json): successful purchase with tx proof.
 - [`purchase_fee_mismatch.json`](workflow/fixtures/purchase_fee_mismatch.json): amount/fee mismatch rejection.
+- [`settle_success.json`](workflow/fixtures/settle_success.json): mark a queued settlement as completed.
+- [`settle_not_found.json`](workflow/fixtures/settle_not_found.json): settlement request when queue item is missing.
 - [`purchase_duplicate_proof.json`](workflow/fixtures/purchase_duplicate_proof.json): duplicate proof replay path.
 - [`purchase_already_owned.json`](workflow/fixtures/purchase_already_owned.json): duplicate entitlement path.
 - [`restore_owned.json`](workflow/fixtures/restore_owned.json): restore allowed for owner.

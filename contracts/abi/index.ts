@@ -1,4 +1,5 @@
 export * from './BalanceReader'
+export * from './CommerceCheckout'
 export * from './EntitlementRegistry'
 export * from './IERC20'
 export * from './IERC165'

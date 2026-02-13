@@ -12,6 +12,7 @@ import {
   handleGovernance,
   handleList,
   handlePurchase,
+  handleSettle,
   handleRefund,
   handleRestore,
   handleSearch,
@@ -67,6 +68,8 @@ const routeAction = (
       return handleSearch(runtime, input);
     case "purchase":
       return handlePurchase(runtime, input);
+    case "settle":
+      return handleSettle(runtime, input);
     case "restore":
       return handleRestore(runtime, input);
     case "refund":

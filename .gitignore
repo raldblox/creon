@@ -6,3 +6,12 @@ workflow/tmp.js
 workflow/tmp.wasm
 workflow/.workflow-temp-*.ts
 
+# Foundry generated artifacts (contracts)
+contracts/broadcast/
+contracts/cache/
+contracts/out/
+contracts/lib/
+contracts/foundry.lock
+
+# Ignore accidental submodule metadata from forge install
+.gitmodules

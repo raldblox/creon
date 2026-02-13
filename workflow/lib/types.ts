@@ -5,6 +5,7 @@ export type ActionName =
   | "list"
   | "search"
   | "purchase"
+  | "settle"
   | "restore"
   | "refund"
   | "governance"

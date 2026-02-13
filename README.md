@@ -44,12 +44,17 @@ Current workflow actions in [`workflow/process/`](workflow/process/):
 - `createListing`: create a product listing, optionally run policy checks, then write to MongoDB.
 - `list`: list products from MongoDB (`ACTIVE` and non-banned by default).
 - `search`: text and tag search over listings.
-- `purchase`: verify payment proof, enforce pricing/fee rules, detect duplicates, write purchase + entitlement, and record onchain entitlement.
+- `purchase`: verify payment proof, enforce configured fee (`COMMERCE_FEE_BPS`, default 1%, max 25%), collect gross to agent wallet, record fee/net settlement ledger, queue merchant payout (`settlement_queue`), detect duplicates, write purchase + entitlement, and record onchain entitlement.
+- `settle`: mark queued merchant payouts as settled by `intentId` and attach settlement tx hash.
 - `restore`: validate ownership and product status before restore.
 - `refund`: allow refunds only for duplicate purchase of same `buyer + productId` with entitlement checks.
 - `governance`: update product lifecycle status (`ACTIVE`, `PAUSED`, `DISCONTINUED`, `BANNED`).
 - `verify`: normalize payment proof and return canonical payment metadata.
 - `decide`: generic allow/deny decision route for agent orchestration.
+
+For x402 transfer-only flows (no calldata params), CREON uses a two-step settlement model:
+- purchase tx sends gross amount to agent wallet (`payTo`)
+- workflow verifies proof and fee, then queues merchant net payout in `settlement_queue`
 
 ## Required Env
 Copy [`.env.example`](.env.example) to [`.env`](.env) and set:
@@ -59,6 +64,7 @@ Copy [`.env.example`](.env.example) to [`.env`](.env) and set:
 - `MONGODB_DB_API_URL` (default `http://localhost:3000/api/db`)
 - `MONGODB_DB_API_KEY` (optional)
 - `ENABLE_POLICY_CHECKS` (`false` to skip OpenAI policy checks for listing)
+- `COMMERCE_FEE_BPS` (default `100`, max `2500`)
 
 If `ENABLE_POLICY_CHECKS=false`, `createListing` does not require OpenAI keys.
 
@@ -114,6 +120,8 @@ For `create_listing_template_pack.json`, generated `productId` is deterministic:
 `EntitlementRegistry` source and deploy script are in:
 - [`contracts/src/EntitlementRegistry.sol`](contracts/src/EntitlementRegistry.sol)
 - [`contracts/script/DeployEntitlementRegistry.s.sol`](contracts/script/DeployEntitlementRegistry.s.sol)
+- [`contracts/src/CommerceCheckout.sol`](contracts/src/CommerceCheckout.sol)
+- [`contracts/script/DeployCommerceCheckout.s.sol`](contracts/script/DeployCommerceCheckout.s.sol)
 - [`contracts/README.md`](contracts/README.md)
 
 ### Deploy On Base Sepolia
@@ -195,10 +203,11 @@ Suggested tour:
 10. [`search_templates.json`](workflow/fixtures/search_templates.json) filters listings by query and tags.
 11. [`purchase_success_x402.json`](workflow/fixtures/purchase_success_x402.json) tests successful purchase via x402 proof.
 12. [`purchase_success_tx.json`](workflow/fixtures/purchase_success_tx.json) tests successful purchase via direct tx proof.
-13. [`purchase_fee_mismatch.json`](workflow/fixtures/purchase_fee_mismatch.json) shows fee guardrails returning denial.
+13. [`purchase_fee_mismatch.json`](workflow/fixtures/purchase_fee_mismatch.json) shows configured fee guardrails returning denial.
 14. [`purchase_duplicate_proof.json`](workflow/fixtures/purchase_duplicate_proof.json) and [`purchase_already_owned.json`](workflow/fixtures/purchase_already_owned.json) exercise duplicate detection.
 15. [`restore_owned.json`](workflow/fixtures/restore_owned.json) and [`restore_not_owned.json`](workflow/fixtures/restore_not_owned.json) test ownership restore checks.
 16. [`refund_request.json`](workflow/fixtures/refund_request.json) and [`refund_eligible_review.json`](workflow/fixtures/refund_eligible_review.json) test duplicate-only refund policy.
 17. [`governance_pause.json`](workflow/fixtures/governance_pause.json) and [`governance_ban.json`](workflow/fixtures/governance_ban.json) test status updates.
 18. [`verify_tx.json`](workflow/fixtures/verify_tx.json) tests proof normalization output only.
 19. [`decide_allow.json`](workflow/fixtures/decide_allow.json) and [`decide_deny.json`](workflow/fixtures/decide_deny.json) test generic decision routing.
+20. [`settle_success.json`](workflow/fixtures/settle_success.json) and [`settle_not_found.json`](workflow/fixtures/settle_not_found.json) test the two-step settlement completion flow.

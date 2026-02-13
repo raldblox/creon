@@ -81,7 +81,7 @@
       "action": "purchase",
       "expectedReasonCode": "FEE_MISMATCH",
       "expectedOk": false,
-      "purpose": "Purchase reject when fee is missing."
+      "purpose": "Purchase reject when paid total does not include required configured fee."
     },
     {
       "file": "purchase_success_x402.json",
@@ -90,6 +90,21 @@
       "expectedOk": true,
       "purpose": "Purchase success via x402 proof.",
       "requires": ["create_listing_template_pack.json"]
+    },
+    {
+      "file": "settle_success.json",
+      "action": "settle",
+      "expectedReasonCode": "SETTLEMENT_RECORDED",
+      "expectedOk": true,
+      "purpose": "Mark queued settlement as completed for a purchase intent.",
+      "requires": ["purchase_success_x402.json"]
+    },
+    {
+      "file": "settle_not_found.json",
+      "action": "settle",
+      "expectedReasonCode": "SETTLEMENT_NOT_FOUND",
+      "expectedOk": false,
+      "purpose": "Settle denied when no pending settlement queue record exists."
     },
     {
       "file": "purchase_duplicate_proof.json",

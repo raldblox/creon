@@ -2,6 +2,7 @@ export { handleCreateListing } from "./createListing";
 export { handleList } from "./list";
 export { handleSearch } from "./search";
 export { handlePurchase } from "./purchase";
+export { handleSettle } from "./settle";
 export { handleRestore } from "./restore";
 export { handleRefund } from "./refund";
 export { handleGovernance } from "./governance";

@@ -102,6 +102,13 @@ const purchaseInputSchema = z.object({
   proof: proofSchema,
 });
 
+const settleInputSchema = z.object({
+  action: z.literal("settle"),
+  intentId: z.string().min(1),
+  settlementTxHash: z.string().min(1),
+  settledBy: z.string().optional(),
+});
+
 const restoreInputSchema = z.object({
   action: z.literal("restore"),
   buyer: z.string().startsWith("0x"),
@@ -140,6 +147,7 @@ export type CreateListingInput = z.infer<typeof createListingInputSchema>;
 export type ListInput = z.infer<typeof listInputSchema>;
 export type SearchInput = z.infer<typeof searchInputSchema>;
 export type PurchaseInput = z.infer<typeof purchaseInputSchema>;
+export type SettleInput = z.infer<typeof settleInputSchema>;
 export type RestoreInput = z.infer<typeof restoreInputSchema>;
 export type RefundInput = z.infer<typeof refundInputSchema>;
 export type GovernanceInput = z.infer<typeof governanceInputSchema>;
@@ -157,6 +165,9 @@ export const validateSearchInput = (input: WorkflowInput): SearchInput =>
 
 export const validatePurchaseInput = (input: WorkflowInput): PurchaseInput =>
   purchaseInputSchema.parse(input);
+
+export const validateSettleInput = (input: WorkflowInput): SettleInput =>
+  settleInputSchema.parse(input);
 
 export const validateRestoreInput = (input: WorkflowInput): RestoreInput =>
   restoreInputSchema.parse(input);

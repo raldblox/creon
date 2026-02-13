@@ -1,0 +1,8 @@
+{
+  "input": {
+    "action": "settle",
+    "intentId": "intent-not-found",
+    "settlementTxHash": "0xabc00000000000000000000000000000000000000000000000000000000000bb",
+    "settledBy": "ops-settlement-worker"
+  }
+}

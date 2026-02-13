@@ -41,3 +41,24 @@ Optional hardening on receiver (set expected workflow identity):
 - `setExpectedAuthor(address)`
 - `setExpectedWorkflowName(bytes10)`
 - `setExpectedWorkflowId(bytes32)`
+
+## Instant Split Checkout (1 transaction)
+`CommerceCheckout` enables buyer purchase + instant fee split in one onchain tx:
+- Buyer pays `base + fee` once via `purchase(productId, merchant, baseAmount)`
+- Contract transfers fee to fee recipient
+- Contract transfers merchant net amount to merchant wallet
+- Tracks cumulative earnings per wallet in `totalEarningsByWallet`
+- Fee is owner-updatable with cap: `MAX_FEE_BPS = 2500` (25%)
+
+Deploy:
+
+```bash
+forge script script/DeployCommerceCheckout.s.sol:DeployCommerceCheckout \
+  --rpc-url base_sepolia \
+  --broadcast
+```
+
+Required env:
+- `CRE_ETH_PRIVATE_KEY`
+- `COMMERCE_USDC_ADDRESS`
+- `COMMERCE_FEE_BPS` (default `100`, max `2500`)
