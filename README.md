@@ -23,7 +23,7 @@ flowchart TD
   D --> H[Deterministic Policy Checks]
   H --> I[OpenAI LLM Policy Classifier]
   I --> J{Allow or Deny}
-  J -->|Allow/Review| K[DB API: /api/db/[action]]
+  J -->|Allow/Review| K[DB API endpoint]
   J -->|Deny| L[Return POLICY_DENY_LLM]
 
   E --> K
