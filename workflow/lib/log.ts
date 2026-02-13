@@ -4,7 +4,7 @@ export type LogScope =
   | "ACTION"
   | "INPUT"
   | "OPENAI"
-  | "MONGODB"
+  | "DATABASE"
   | "PAYMENT"
   | "CHAIN";
 

@@ -221,7 +221,7 @@ export const handlePurchase: ActionHandler = (runtime, input) => {
     feeBps: effectiveFeeBps,
     nowIso,
   });
-  logStep(runtime, "MONGODB", "purchase commit completed");
+  logStep(runtime, "DATABASE", "purchase commit completed");
 
   return {
     ok: true,

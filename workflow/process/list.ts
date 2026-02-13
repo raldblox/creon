@@ -22,7 +22,7 @@ export const handleList: ActionHandler = (runtime, input) => {
     sort: { createdAt: -1 },
     limit: parsed.limit ?? 20,
   });
-  logStep(runtime, "MONGODB", "list query completed");
+  logStep(runtime, "DATABASE", "list query completed");
 
   return {
     ok: true,

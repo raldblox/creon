@@ -13,7 +13,7 @@ export const handleRefund: ActionHandler = (runtime, input) => {
     filter: { buyer: parsed.buyer, productId: parsed.productId },
     limit: 1,
   });
-  logStep(runtime, "MONGODB", "refund eligibility lookup completed");
+  logStep(runtime, "DATABASE", "refund eligibility lookup completed");
 
   const eligibleByDuplicate =
     refundEligibility.documents.length > 0 &&

@@ -18,7 +18,7 @@ export const handleGovernance: ActionHandler = (runtime, input) => {
     },
     upsert: false,
   });
-  logStep(runtime, "MONGODB", "governance status update completed");
+  logStep(runtime, "DATABASE", "governance status update completed");
 
   return {
     ok: true,

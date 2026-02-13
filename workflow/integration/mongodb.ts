@@ -176,7 +176,7 @@ const executeMongoAction = (
   for (let attempt = 1; attempt <= retries; attempt += 1) {
     logStep(
       runtime,
-      "MONGODB",
+      "DATABASE",
       `call start action=${action} mode=${useAtlasDataApi ? "atlas-data-api" : "db-api-bridge"} attempt=${attempt}`,
     );
     try {
@@ -189,7 +189,7 @@ const executeMongoAction = (
 
       logStep(
         runtime,
-        "MONGODB",
+        "DATABASE",
         `call completed action=${action} status=${response.statusCode}`,
       );
 
@@ -208,7 +208,7 @@ const executeMongoAction = (
       lastError = new Error(message);
       logStep(
         runtime,
-        "MONGODB",
+        "DATABASE",
         `retry scheduled action=${action} nextAttempt=${attempt + 1}`,
       );
     } catch (error) {
@@ -221,7 +221,7 @@ const executeMongoAction = (
       }
       logStep(
         runtime,
-        "MONGODB",
+        "DATABASE",
         `retry scheduled action=${action} nextAttempt=${attempt + 1}`,
       );
     }

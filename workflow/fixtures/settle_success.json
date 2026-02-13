@@ -2,7 +2,6 @@
   "input": {
     "action": "settle",
     "intentId": "intent-purchase-x402-001",
-    "settlementTxHash": "0xabc00000000000000000000000000000000000000000000000000000000000aa",
     "settledBy": "ops-settlement-worker"
   }
 }

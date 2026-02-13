@@ -75,7 +75,7 @@ export const handleSettle: ActionHandler = (runtime, input) => {
     },
     upsert: false,
   });
-  logStep(runtime, "MONGODB", "settlement queue marked as SETTLED");
+  logStep(runtime, "DATABASE", "settlement queue marked as SETTLED");
 
   if (merchant) {
     updateOne(runtime, {
@@ -91,7 +91,7 @@ export const handleSettle: ActionHandler = (runtime, input) => {
       },
       upsert: true,
     });
-    logStep(runtime, "MONGODB", "merchant settlement totals updated");
+    logStep(runtime, "DATABASE", "merchant settlement totals updated");
   }
 
   return {

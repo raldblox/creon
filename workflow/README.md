@@ -30,6 +30,13 @@ Routes execute implemented workflow logic and emit `CHECK` checkpoints.
 - `verify`: normalizes and returns payment proof metadata.
 - `decide`: returns an allow/deny decision object for orchestration/testing.
 
+## Hash And Status Semantics
+- `paymentTxHash`: buyer payment tx hash from proof (buyer -> agent wallet).
+- `entitlementTxHash`: onchain entitlement registry tx hash.
+- `settlementTxHash`: merchant payout tx hash produced by checkout settlement execution.
+- `settlementStatus`:
+`PENDING` after purchase, `SETTLED` only after payout release.
+
 ## OpenAI LLM Policy Classifier
 The LLM path is implemented in [`workflow/integration/openai.ts`](workflow/integration/openai.ts) and is called by
 [`workflow/process/createListing.ts`](workflow/process/createListing.ts) only when `ENABLE_POLICY_CHECKS=true`.
@@ -47,7 +54,7 @@ Classification output:
 Behavior:
 - Deterministic checks are evaluated for signals/flags, but OpenAI remains the final allow/deny decision maker.
 - If LLM returns `deny`, listing is denied with `reasonCode=POLICY_DENY_LLM`.
-- If allowed/review, listing is stored and `llmPolicy` is saved in MongoDB.
+- If allowed/review, listing is stored and `llmPolicy` is saved in the database.
 - `OPENAI_API_KEY` can be loaded from `.env` or workflow secret `OPENAI_API_KEY`.
 
 ## Risk And Compliance Commitment
@@ -106,7 +113,7 @@ bun run dev
 ```
 
 2. Run the workflow with the list fixture.
-This executes the `list` action and returns current products from MongoDB.
+This executes the `list` action and returns current products from the database.
 
 ```bash
 cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/list_basic.json"
@@ -124,7 +131,36 @@ cre workflow simulate ./workflow --target=staging-settings --non-interactive --t
 Expected log checkpoints include:
 - `[INPUT] validated payload`
 - `[ACTION] routing action=list`
-- `[MONGODB] list query completed`
+- `[DATABASE] list query completed`
+
+## Complete End-To-End Simulation
+1. Create listing:
+
+```bash
+cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_template_pack.json"
+```
+
+2. Purchase:
+
+```bash
+cre workflow simulate ./workflow --broadcast --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/purchase_success_x402.json"
+```
+
+Expected:
+- `reasonCode = PURCHASE_RECORDED_PENDING_SETTLEMENT`
+- `settlementStatus = PENDING`
+- includes `paymentTxHash` and `entitlementTxHash`
+
+3. Settle:
+
+```bash
+cre workflow simulate ./workflow --broadcast --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/settle_success.json"
+```
+
+Expected:
+- `reasonCode = SETTLEMENT_RECORDED`
+- `status = SETTLED`
+- includes `settlementTxHash`
 
 To test LLM classification on listing:
 1. Set `ENABLE_POLICY_CHECKS=true` and valid OpenAI keys in root `.env`.

@@ -96,7 +96,7 @@
       "action": "settle",
       "expectedReasonCode": "SETTLEMENT_RECORDED",
       "expectedOk": true,
-      "purpose": "Mark queued settlement as completed for a purchase intent.",
+      "purpose": "Auto-execute checkout payout and mark queued settlement as completed.",
       "requires": ["purchase_success_x402.json"]
     },
     {

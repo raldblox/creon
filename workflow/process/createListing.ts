@@ -104,7 +104,7 @@ export const handleCreateListing: ActionHandler = (runtime, input) => {
     collection: "products",
     document: listingDocument,
   });
-  logStep(runtime, "MONGODB", "listing inserted into products");
+  logStep(runtime, "DATABASE", "listing inserted into products");
 
   const responseData: Record<string, unknown> = {
     productId,

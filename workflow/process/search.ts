@@ -28,7 +28,7 @@ export const handleSearch: ActionHandler = (runtime, input) => {
     sort: { createdAt: -1 },
     limit: parsed.limit ?? 20,
   });
-  logStep(runtime, "MONGODB", "search query completed");
+  logStep(runtime, "DATABASE", "search query completed");
 
   return {
     ok: true,

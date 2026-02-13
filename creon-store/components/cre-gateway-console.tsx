@@ -377,7 +377,7 @@ export function CreGatewayConsole() {
       const account = privateKeyToAccount(privateKey);
       pushStep("WALLET", `Using buyer wallet ${account.address}`);
       const product = await fetchProductFromDb(productId);
-      pushStep("MONGODB", `Loaded product ${product.productId} from /api/db/find`);
+      pushStep("DATABASE", `Loaded product ${product.productId} from /api/db/find`);
       patchResult({ product });
       const pricing = product.pricing ?? {};
       const baseAmount = parseAmount(pricing.amount);

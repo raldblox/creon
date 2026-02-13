@@ -40,7 +40,7 @@ export const handleRestore: ActionHandler = (runtime, input) => {
     filter: { buyer: parsed.buyer, productId: parsed.productId },
     limit: 1,
   });
-  logStep(runtime, "MONGODB", "restore entitlement lookup completed");
+  logStep(runtime, "DATABASE", "restore entitlement lookup completed");
 
   if (entitlement.documents.length === 0) {
     return {

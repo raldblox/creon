@@ -7,10 +7,10 @@ Agentic commerce built on Chainlink CRE workflows.
 - OpenAI LLM policy classifier runs inside workflow `createListing` path via [`workflow/integration/openai.ts`](workflow/integration/openai.ts) using system prompt from [`workflow/lib/prompts/listingPolicy.ts`](workflow/lib/prompts/listingPolicy.ts)
 - Public API gateway is served by Next.js via [`creon-store/app/api/cre/[action]/route.ts`](creon-store/app/api/cre/[action]/route.ts) for non-purchase actions and [`creon-store/app/api/cre/purchase/route.ts`](creon-store/app/api/cre/purchase/route.ts) for x402 purchase
 - Next.js request guard uses [`creon-store/proxy.ts`](creon-store/proxy.ts) (Next 16 proxy, not middleware)
-- MongoDB access is handled via Next.js route [`creon-store/app/api/db/[action]/route.ts`](creon-store/app/api/db/[action]/route.ts)
+- Database access is handled via Next.js route [`creon-store/app/api/db/[action]/route.ts`](creon-store/app/api/db/[action]/route.ts)
 - Next.js route connects to Atlas using `MONGODB_ATLAS_URI`
 - Workflow calls the route through `MONGODB_DB_API_URL`
-- Workflow can also call MongoDB Atlas Data API directly via `MONGODB_DATA_API_URL` (with `MONGODB_DATA_API_KEY` and `MONGODB_DATA_SOURCE`)
+- Workflow can also call Atlas Data API directly via `MONGODB_DATA_API_URL` (with `MONGODB_DATA_API_KEY` and `MONGODB_DATA_SOURCE`)
 - Workflow responses include an `acp` envelope aligned with the Agentic Commerce Protocol (a standard response format for agent-driven checkout and commerce flows): https://agentic-commerce-protocol.com/
 
 ```mermaid
@@ -38,7 +38,7 @@ flowchart TD
   J --> O
   K --> O
 
-  O --> Q[(MongoDB Atlas)]
+  O --> Q[(Atlas Database)]
   J --> R[(EntitlementRegistry on Base Sepolia)]
 
   Q --> S[ACP-formatted Response]
@@ -48,8 +48,8 @@ flowchart TD
 
 ## Workflow Coverage
 Current workflow actions in [`workflow/process/`](workflow/process/):
-- `createListing`: create a product listing, optionally run policy checks, then write to MongoDB.
-- `list`: list products from MongoDB (`ACTIVE` and non-banned by default).
+- `createListing`: create a product listing, run policy checks, then write to database.
+- `list`: list products from the database (`ACTIVE` and non-banned by default).
 - `search`: text and tag search over listings.
 - `purchase`: verify payment proof, enforce fee from `COMMERCE_CHECKOUT_ADDRESS` onchain quote when configured (fallback `COMMERCE_FEE_BPS`), collect gross to agent wallet, record fee/net settlement ledger, queue merchant payout (`settlement_queue`), detect duplicates, write purchase + entitlement, and record onchain entitlement.
 - `settle`: execute checkout payout for queued records (when tx hash is not provided), then mark settlement as completed and attach `settlementTxHash`.
@@ -65,6 +65,16 @@ For x402 transfer-only flows (no calldata params), CREON uses a two-step settlem
 - `purchase` returns `paymentTxHash` (buyer payment) and `entitlementTxHash` (registry write)
 - merchant payout tx hash is attached during `settle` as `settlementTxHash`
 - do not pass buyer `paymentTxHash` into `settle`; leaving settlement hash empty triggers checkout payout execution and returns real `settlementTxHash`
+
+### Hashes And Status
+- `paymentTxHash`: buyer -> agent wallet payment tx hash from x402 proof.
+- `entitlementTxHash`: onchain `EntitlementRegistry` write tx hash.
+- `settlementTxHash`: payout tx hash that executes merchant release via checkout split.
+- `settlementStatus`:
+`PENDING` after `purchase`, and `SETTLED` only after payout release succeeds in `settle`.
+
+`purchase` success means payment verified + entitlement granted + payout queued.
+`settle` success means payout released (fee recipient + merchant split) and queue marked `SETTLED`.
 
 ## Required Env
 Copy [`.env.example`](.env.example) to [`.env`](.env) and set:
@@ -111,7 +121,7 @@ Required env for LLM path:
 
 ## Local Run
 1. Start the DB API server.
-This runs the Next.js `/api/db/[action]` bridge that the workflow calls for MongoDB reads and writes.
+This runs the Next.js `/api/db/[action]` bridge that the workflow calls for database reads and writes.
 
 ```bash
 cd creon-store
@@ -182,6 +192,37 @@ Use this command pattern for any fixture:
 ```bash
 cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/<fixture>.json"
 ```
+
+## Complete Simulation Flow
+Run this full sequence to test listing, purchase, and settlement end-to-end.
+
+1. Create listing:
+
+```bash
+cre workflow simulate ./workflow --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/create_listing_template_pack.json"
+```
+
+2. Purchase with proof:
+
+```bash
+cre workflow simulate ./workflow --broadcast --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/purchase_success_x402.json"
+```
+
+Expected purchase result:
+- `reasonCode = PURCHASE_RECORDED_PENDING_SETTLEMENT`
+- `settlementStatus = PENDING`
+- output contains `paymentTxHash` and `entitlementTxHash`
+
+3. Settle payout (leave settlement hash empty to auto-execute checkout settlement):
+
+```bash
+cre workflow simulate ./workflow --broadcast --target=staging-settings --non-interactive --trigger-index=0 --http-payload "@$(pwd)/workflow/fixtures/settle_success.json"
+```
+
+Expected settle result:
+- `reasonCode = SETTLEMENT_RECORDED`
+- `status = SETTLED`
+- output contains `settlementTxHash` (merchant payout tx)
 
 ## Allow And Deny Listing Runs
 Allow example (professional template bundle, low-risk storefront content):
