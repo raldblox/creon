@@ -47,6 +47,7 @@ flowchart TD
   I --> O[EntitlementRegistry]
   I --> P[CommerceCheckout]
   N --> Q[ACP RESPONSE ENVELOPE]
+  O --> N
   O --> Q
   P --> Q
 ```
