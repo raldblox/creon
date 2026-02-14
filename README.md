@@ -24,7 +24,7 @@ CREON is an agentic commerce system built on **Chainlink Runtime Environment (CR
 ## Architecture
 ```mermaid
 flowchart TD
-  A[Buyer or Agent UI] --> B[CREON GATEWAY | Next.js]
+  A[Buyer or Agent UI] --> B[CREON GATEWAY - Next.js]
   B --> C[x402 Gated Purchase]
   B --> D[CRE Action Relay]
   C --> E[Chainlink CRE Workflow]
@@ -33,12 +33,12 @@ flowchart TD
   E --> F[Action Router]
   F --> G[createListing]
   F --> H[list and search]
-  F --> I[purchase -> settle]
-  F --> J[restore refund governance verify decide]
+  F --> I[purchase - settle]
+  F --> J[restore - refund ]
 
   G --> K[Deterministic Policy Checks]
   K --> L[OpenAI LLM Policy Classifier]
-  L --> M[Allow | Review | Deny]
+  L --> M[Allow - Review - Deny]
   M --> N[Database API]
   H --> N
   I --> N
