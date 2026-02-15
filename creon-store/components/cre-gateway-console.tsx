@@ -115,6 +115,8 @@ const toJson = (value: unknown): string => JSON.stringify(value, null, 2);
 const round6 = (value: number): number => Math.round(value * 1_000_000) / 1_000_000;
 const READONLY_JSON_CLASS =
   "min-h-[120px] max-h-[260px] w-full resize-none overflow-auto whitespace-pre font-mono text-xs";
+const SELECT_CLASS =
+  "border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring h-9 w-full rounded-md border px-3 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none";
 
 const asPrivateKey = (value: string): `0x${string}` => {
   const normalized = value.trim();
@@ -535,30 +537,44 @@ export function CreGatewayConsole() {
 
   return (
     <main className="mx-auto min-h-screen max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <header className="mb-6 space-y-2">
-        <h1 className="text-2xl font-semibold">CREON HTTP Trigger Payload Generator</h1>
-        <p className="text-muted-foreground text-sm">
-          Action-based payload builder and x402 purchase gateway tester for CRE workflow.
+      <header className="mb-8 overflow-hidden rounded-2xl border bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-6 shadow-sm">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-full border bg-white px-3 py-1 text-xs font-medium tracking-wide text-blue-700">
+            CRE Workflow Console
+          </span>
+          <span className="rounded-full border bg-white px-3 py-1 text-xs font-medium tracking-wide text-slate-700">
+            x402 Purchase Gateway
+          </span>
+          <span className="rounded-full border bg-white px-3 py-1 text-xs font-medium tracking-wide text-slate-700">
+            Live Payload Builder
+          </span>
+        </div>
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight text-slate-900">
+          CREON HTTP Trigger Payload Generator
+        </h1>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
+          Build, inspect, and copy action payloads for manual CRE simulation. Purchase mode also
+          runs x402 flow and captures payment artifacts in real time.
         </p>
       </header>
 
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mb-6 flex flex-wrap gap-2 rounded-xl border bg-card p-3">
         {ACTIONS.map((name) => (
-          <button
+          <Button
             key={name}
             type="button"
             onClick={() => setAction(name)}
-            className={`rounded-md border px-3 py-1.5 text-sm ${
-              action === name ? "border-primary bg-primary/10" : "border-border"
-            }`}
+            variant={action === name ? "default" : "outline"}
+            size="sm"
+            className="capitalize"
           >
             {name}
-          </button>
+          </Button>
         ))}
       </div>
 
       <section className="grid items-start gap-6 xl:grid-cols-[minmax(320px,380px)_minmax(0,1fr)]">
-        <Card className="min-w-0">
+        <Card className="min-w-0 border-slate-200/80 shadow-sm">
           <CardHeader>
             <CardTitle>Action Inputs</CardTitle>
             <CardDescription>Only fields relevant to `{action}` are shown.</CardDescription>
@@ -601,7 +617,7 @@ export function CreGatewayConsole() {
 
                 {walletError && <p className="text-sm text-red-600">{walletError}</p>}
                 {walletInfo && (
-                  <div className="min-w-0 rounded-md border p-3 text-xs">
+                  <div className="min-w-0 rounded-lg border bg-slate-50 p-3 text-xs">
                     <p>
                       <strong>Address:</strong>{" "}
                       <span className="break-all">{walletInfo.address}</span>
@@ -622,7 +638,7 @@ export function CreGatewayConsole() {
                     value={purchaseSteps
                       .map((s) => `[${s.at}] [${s.stage}] ${s.detail}`)
                       .join("\n")}
-                    className="min-h-[220px] max-h-[320px] w-full resize-none overflow-auto whitespace-pre font-mono text-xs"
+                    className="min-h-[220px] max-h-[320px] w-full resize-none overflow-auto whitespace-pre rounded-lg border bg-slate-950 p-3 font-mono text-xs text-slate-100"
                   />
                 </div>
               </>
@@ -654,7 +670,7 @@ export function CreGatewayConsole() {
                       onChange={(e) =>
                         setCategory(e.target.value as (typeof LISTING_CATEGORY_VALUES)[number])
                       }
-                      className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                      className={SELECT_CLASS}
                     >
                       {LISTING_CATEGORY_VALUES.map((value) => (
                         <option key={value} value={value}>
@@ -669,7 +685,7 @@ export function CreGatewayConsole() {
                       onChange={(e) =>
                         setDeliveryType(e.target.value as (typeof DELIVERY_TYPE_VALUES)[number])
                       }
-                      className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                      className={SELECT_CLASS}
                     >
                       {DELIVERY_TYPE_VALUES.map((value) => (
                         <option key={value} value={value}>
@@ -684,7 +700,7 @@ export function CreGatewayConsole() {
                       onChange={(e) =>
                         setDeliveryFormat(e.target.value as (typeof DELIVERY_FORMAT_VALUES)[number])
                       }
-                      className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                      className={SELECT_CLASS}
                     >
                       {DELIVERY_FORMAT_VALUES.map((value) => (
                         <option key={value} value={value}>
@@ -699,7 +715,7 @@ export function CreGatewayConsole() {
                       onChange={(e) =>
                         setDeliveryAccess(e.target.value as (typeof DELIVERY_ACCESS_VALUES)[number])
                       }
-                      className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                      className={SELECT_CLASS}
                     >
                       {DELIVERY_ACCESS_VALUES.map((value) => (
                         <option key={value} value={value}>
@@ -714,7 +730,7 @@ export function CreGatewayConsole() {
                       onChange={(e) =>
                         setRefundPolicy(e.target.value as (typeof REFUND_POLICY_VALUES)[number])
                       }
-                      className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                      className={SELECT_CLASS}
                     >
                       {REFUND_POLICY_VALUES.map((value) => (
                         <option key={value} value={value}>
@@ -792,7 +808,7 @@ export function CreGatewayConsole() {
                       onChange={(e) =>
                         setStatus(e.target.value as (typeof GOVERNANCE_STATUS_VALUES)[number])
                       }
-                      className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-9 w-full rounded-md border px-3 py-1 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                      className={SELECT_CLASS}
                     >
                       {GOVERNANCE_STATUS_VALUES.map((value) => (
                         <option key={value} value={value}>
@@ -817,7 +833,7 @@ export function CreGatewayConsole() {
         <div className="min-w-0 space-y-6">
           {action === "purchase" ? (
             <>
-              <Card>
+              <Card className="border-slate-200/80 shadow-sm">
                 <CardHeader>
                   <CardTitle>x402 Purchase Artifacts</CardTitle>
                   <CardDescription>
@@ -872,7 +888,7 @@ export function CreGatewayConsole() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-slate-200/80 shadow-sm">
                 <CardHeader className="flex-row items-center justify-between">
                   <div>
                     <CardTitle>Workflow Payload Ready</CardTitle>
@@ -888,13 +904,13 @@ export function CreGatewayConsole() {
                   <Textarea
                     readOnly
                     value={payloadJson}
-                    className="min-h-[260px] max-h-[360px] resize-none overflow-auto whitespace-pre font-mono text-xs"
+                    className="min-h-[260px] max-h-[360px] resize-none overflow-auto whitespace-pre rounded-lg border bg-slate-950 p-3 font-mono text-xs text-slate-100"
                   />
                 </CardContent>
               </Card>
             </>
           ) : (
-            <Card>
+            <Card className="border-slate-200/80 shadow-sm">
               <CardHeader className="flex-row items-center justify-between">
                 <div>
                   <CardTitle>HTTP Trigger Payload JSON</CardTitle>
@@ -910,7 +926,7 @@ export function CreGatewayConsole() {
                 <Textarea
                   readOnly
                   value={payloadJson}
-                  className="min-h-[560px] max-h-[70vh] resize-none overflow-auto whitespace-pre font-mono text-xs"
+                  className="min-h-[560px] max-h-[70vh] resize-none overflow-auto whitespace-pre rounded-lg border bg-slate-950 p-3 font-mono text-xs text-slate-100"
                 />
               </CardContent>
             </Card>
@@ -920,3 +936,5 @@ export function CreGatewayConsole() {
     </main>
   );
 }
+
+
