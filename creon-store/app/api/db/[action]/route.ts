@@ -7,6 +7,10 @@ let cachedClient: MongoClient | null = null;
 let cachedResolvedUri: string | null = null;
 let dnsConfigured = false;
 
+const ISO_UTC_REGEX =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/;
+const TEMPORAL_FIELD_REGEX = /(At|Date)$/i;
+
 const configureDnsResolvers = () => {
   if (dnsConfigured) {
     return;
@@ -79,6 +83,34 @@ const toPlainJson = (value: unknown): unknown =>
     }),
   );
 
+const normalizeTemporalValues = (value: unknown, parentKey?: string): unknown => {
+  if (Array.isArray(value)) {
+    return value.map((item) => normalizeTemporalValues(item));
+  }
+
+  if (value && typeof value === "object" && !(value instanceof Date)) {
+    const entries = Object.entries(value as Record<string, unknown>).map(([key, child]) => [
+      key,
+      normalizeTemporalValues(child, key),
+    ]);
+    return Object.fromEntries(entries);
+  }
+
+  if (
+    typeof value === "string" &&
+    parentKey &&
+    TEMPORAL_FIELD_REGEX.test(parentKey) &&
+    ISO_UTC_REGEX.test(value)
+  ) {
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) {
+      return parsed;
+    }
+  }
+
+  return value;
+};
+
 const requireApiKeyIfConfigured = (request: NextRequest): NextResponse | null => {
   const configured = process.env.MONGODB_DB_API_KEY ?? "";
   if (!configured) {
@@ -150,7 +182,8 @@ export async function POST(
       if (!collection) {
         return NextResponse.json({ error: "collection is required" }, { status: 400 });
       }
-      const result = await collection.insertOne((payload.document ?? {}) as Document);
+      const normalizedDocument = normalizeTemporalValues(payload.document ?? {}) as Document;
+      const result = await collection.insertOne(normalizedDocument);
       return NextResponse.json({ insertedId: String(result.insertedId) });
     }
 
@@ -172,7 +205,8 @@ export async function POST(
       if (!collection) {
         return NextResponse.json({ error: "collection is required" }, { status: 400 });
       }
-      const result = await collection.updateOne(payload.filter ?? {}, payload.update ?? {}, {
+      const normalizedUpdate = normalizeTemporalValues(payload.update ?? {}) as Document;
+      const result = await collection.updateOne(payload.filter ?? {}, normalizedUpdate, {
         upsert: payload.upsert ?? false,
       });
       return NextResponse.json({
@@ -182,8 +216,54 @@ export async function POST(
       });
     }
 
+    if (action === "repairTimestamps") {
+      const collections = Array.isArray(payload.collection)
+        ? payload.collection
+        : [
+            "products",
+            "purchases",
+            "entitlements",
+            "replay_store",
+            "merchant_settlements",
+            "settlement_queue",
+          ];
+      const fields = ["createdAt", "updatedAt", "grantedAt", "settledAt"];
+      const results: Record<string, number> = {};
+
+      for (const name of collections) {
+        if (typeof name !== "string" || name.length === 0) continue;
+        const setStage = Object.fromEntries(
+          fields.map((field) => [
+            field,
+            {
+              $cond: [
+                { $eq: [{ $type: `$${field}` }, "string"] },
+                {
+                  $dateFromString: {
+                    dateString: `$${field}`,
+                    onError: `$${field}`,
+                    onNull: `$${field}`,
+                  },
+                },
+                `$${field}`,
+              ],
+            },
+          ]),
+        );
+
+        const res = await db
+          .collection(name)
+          .updateMany({}, [{ $set: setStage }] as Document[]);
+        results[name] = res.modifiedCount;
+      }
+
+      return NextResponse.json({ ok: true, repaired: results });
+    }
+
     if (action === "purchaseCommit") {
       const nowIso = payload.nowIso || new Date().toISOString();
+      const nowDate = new Date(nowIso);
+      const nowValue = Number.isNaN(nowDate.getTime()) ? new Date() : nowDate;
       const buyer = String(payload.buyer ?? "");
       const merchant = String(payload.merchant ?? "");
       const productId = String(payload.productId ?? "");
@@ -223,7 +303,7 @@ export async function POST(
             merchant,
             productId,
             proofKind,
-            createdAt: nowIso,
+            createdAt: nowValue,
           },
         },
         { upsert: true },
@@ -238,7 +318,7 @@ export async function POST(
             productId,
             intentId,
             txHash: entitlementTxHash,
-            grantedAt: nowIso,
+            grantedAt: nowValue,
           },
         },
         { upsert: true },
@@ -258,7 +338,7 @@ export async function POST(
         feeBps,
         paymentTxHash,
         entitlementTxHash,
-        createdAt: nowIso,
+        createdAt: nowValue,
       });
 
       await db.collection("merchant_settlements").updateOne(
@@ -273,10 +353,10 @@ export async function POST(
           $set: {
             merchant,
             settlementWallet: agentWallet,
-            updatedAt: nowIso,
+            updatedAt: nowValue,
           },
           $setOnInsert: {
-            createdAt: nowIso,
+            createdAt: nowValue,
           },
         },
         { upsert: true },
@@ -298,8 +378,8 @@ export async function POST(
         status: "PENDING",
         settlementMode:
           proofKind === "x402" ? "x402_transfer_only_two_step" : "standard_two_step",
-        createdAt: nowIso,
-        updatedAt: nowIso,
+        createdAt: nowValue,
+        updatedAt: nowValue,
       });
 
       return NextResponse.json({ ok: true, committed: true });
